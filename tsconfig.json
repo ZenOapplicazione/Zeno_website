@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Groups from '../components/Groups.astro';
+import Impact from '../components/Impact.astro';
+import Benefits from '../components/Benefits.astro';
+---
+
+<BaseLayout title="ZenO | La spesa consapevole, semplificata e condivisa">
+  
+  <Navbar />
+  <Hero />
+  <HowItWorks />
+  <Groups />
+  <Impact />
+  <Benefits />
+
+</BaseLayout>

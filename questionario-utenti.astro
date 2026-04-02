@@ -1,0 +1,505 @@
+---
+// src/components/Navbar.astro
+---
+<nav class="navbar-top" id="navbar-top">
+  
+  <div class="nav-left">
+    <div class="dropdown" id="nav-dropdown">
+      <button class="dropdown-btn" id="dropdown-toggle-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        <span id="current-section-name">Menu</span>
+      </button>
+      
+      <div class="dropdown-menu" id="dropdown-menu">
+        <button class="dropdown-item" data-target="#top">Home</button>
+        <button class="dropdown-item" data-target=".how-section">Come funziona</button>
+        <button class="dropdown-item" data-target=".groups-section">A chi si rivolge</button>
+        <button class="dropdown-item" data-target=".impact-section">Risparmio ambientale</button>
+        <button class="dropdown-item" data-target=".benefits-section">Valore sociale</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-center">
+    <span class="navbar-logo">ZenO</span>
+  </div>
+
+  <div class="nav-right">
+
+    <!-- BOTTONE QUESTIONARI -->
+    <div class="nav-popup-wrapper" id="questionari-wrapper">
+      <button class="icon-btn dark-green" id="questionari-btn" title="Questionari">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9h6m-6 4h6m-6-8h.01"/></svg>
+      </button>
+      <div class="nav-popup" id="questionari-popup">
+        <a href="/questionario-utenti" class="nav-popup-item">Questionario utenti</a>
+        <a href="/questionario-produttori" class="nav-popup-item">Questionario produttori</a>
+      </div>
+    </div>
+
+    <!-- BOTTONE MAIL -->
+    <div class="nav-popup-wrapper" id="mail-wrapper">
+      <button class="icon-btn light-green" id="mail-btn" title="Contattaci">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      </button>
+      <div class="nav-popup nav-popup--form" id="mail-popup">
+        <p class="nav-popup-title">Resta aggiornato</p>
+        <form id="navbar-email">
+        <input type="email" name="email" id="navbar-mail-input" class="nav-popup-input" placeholder="La tua email" required>
+        <button type="submit" class="nav-popup-submit" id="navbar-mail-submit">Iscriviti</button>
+        </form>
+        <p class="nav-popup-confirm" id="mail-confirm">✓ Grazie, ti contatteremo presto!</p>
+      </div>
+    </div>
+
+  </div>
+
+</nav>
+        <script>
+      document.getElementById('navbar-email').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const input = document.getElementById('navbar-mail-input');
+        const btn = document.getElementById('navbar-mail-submit');
+        const data = new FormData(form);
+
+        try {
+          const res = await fetch('https://formspree.io/f/mojkyjgd', {
+            method: 'POST',
+            body: data,
+            headers: { 'Accept': 'application/json' }
+          });
+          console.log(res)
+          if (res.ok) {
+            input.value = 'Grazie, sarai aggiornato presto! 🌱';
+            input.readOnly = true;
+            input.style.background = '#e8f0e3';
+            input.style.color = '#2e3a28';
+            input.style.fontWeight = '500';
+            btn.disabled = true;
+            btn.style.opacity = '0.4';
+            btn.style.cursor = 'default';
+          }
+        } catch(err) {
+          console.error(err);
+        }
+      });
+    </script>
+<style>
+  /* Base Navbar */
+  .navbar-top { 
+    position: fixed; 
+    top: 0; left: 0; right: 0; 
+    height: 74px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 0 2.5rem; 
+    background: transparent;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+  }
+
+  .navbar-top.scrolled {
+    background: rgba(220, 224, 218, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .navbar-logo { 
+    font-family: var(--font-display, sans-serif); 
+    font-size: 2.2rem; 
+    font-weight: 800; 
+    color: #ff5e14; 
+    letter-spacing: -0.02em;
+  }
+
+  .nav-left {
+    position: relative;
+    z-index: 1001;
+  }
+  .dropdown {
+    position: relative;
+  }
+  .dropdown-btn {
+    background: transparent;
+    border: 1.5px solid #d0c8b6;
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body, sans-serif);
+  }
+  .dropdown-btn:hover {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: #b8b09d;
+  }
+  .dropdown-btn svg {
+    width: 16px;
+    height: 16px;
+    color: #333;
+    transition: transform 0.3s ease;
+  }
+  .dropdown.open .dropdown-btn svg {
+    transform: rotate(180deg);
+  }
+  .dropdown-btn span {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f0f0f0;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .dropdown-item {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.95rem;
+    color: #4b5563;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .dropdown-item:hover {
+    background: #f4f3ed;
+    color: #111827;
+    font-weight: 500;
+  }
+
+  /* Nav Right */
+  .nav-right { 
+    display: flex; 
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  /* Wrapper per ogni bottone con popup */
+  .nav-popup-wrapper {
+    position: relative;
+  }
+
+  .icon-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  .icon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  @keyframes gentle-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .bounce-animation {
+    animation: gentle-bounce 0.6s ease;
+  }
+  .icon-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  .dark-green { background-color: #1c4233; }
+  .dark-green:hover { background-color: #132f24; }
+  .light-green { background-color: #407d54; }
+  .light-green:hover { background-color: #2d5d3d; }
+
+  /* Popup generico (questionari e mail) */
+  .nav-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #2d5d3d;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
+    min-width: 190px;
+    padding: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1002;
+  }
+  .nav-popup.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Voci popup questionari */
+  .nav-popup-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.92rem;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-popup-item:hover {
+    background: #f4f3ed;
+    color: #111827;
+    font-weight: 500;
+  }
+
+  /* Popup form mail */
+  .nav-popup--form {
+    min-width: 320px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background-color: #ffffff;
+  }
+  .nav-popup-title {
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1c4233;
+    margin: 0 0 0.2rem 0;
+  }
+  .nav-popup-input {
+    width: 100%;
+    padding: 0.8rem .55rem 0.8rem;
+    margin-bottom: 0.5rem;
+    border: 1.5px solid #d0c8b6;
+    border-radius: 8px;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.88rem;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+  .nav-popup-input:focus {
+    border-color: #407d54;
+  }
+  .nav-popup-submit {
+    width: 100%;
+    padding: 0.55rem;
+    background: #1c4233;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-popup-submit:hover {
+    background: #132f24;
+  }
+  .nav-popup-confirm {
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.82rem;
+    color: #407d54;
+    text-align: center;
+    margin: 0;
+    display: none;
+  }
+  .nav-popup-confirm.visible {
+    display: block;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .navbar-top { padding: 0 1.5rem; }
+    .dropdown-btn span { display: none; }
+    .dropdown-btn { padding: 0.6rem; }
+    .icon-btn { width: 40px; height: 40px; }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .nav-right { gap: 0.5rem; }
+  }
+</style>
+
+<script>
+  const navbar = document.getElementById('navbar-top');
+  const label = document.getElementById('current-section-name');
+  const dropdown = document.getElementById('nav-dropdown');
+  const toggleBtn = document.getElementById('dropdown-toggle-btn');
+  const items = document.querySelectorAll('.dropdown-item');
+
+  const sections = [
+    { class: '.how-section', name: 'Come funziona' },
+    { class: '.groups-section', name: 'A chi si rivolge' },
+    { class: '.impact-section', name: 'Risparmio ambientale' },
+    { class: '.benefits-section', name: 'Valore sociale' }
+  ];
+
+  let ticking = false;
+
+  // 1. SCROLL
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+
+        let currentName = 'Menu';
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const el = document.querySelector(sections[i].class);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= 150) { 
+              currentName = sections[i].name;
+              break; 
+            }
+          }
+        }
+        if (window.scrollY < 100) currentName = 'Menu';
+        if (label.textContent !== currentName) label.textContent = currentName;
+
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // 2. MENU NAVIGAZIONE
+  toggleBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('open');
+  });
+
+  // 3. SMOOTH SCROLL
+  items.forEach(item => {
+    item.addEventListener('click', (e) => {
+      const targetSel = e.target.getAttribute('data-target');
+      if (targetSel === '#top' || targetSel === '.hero-spacer') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const targetEl = document.querySelector(targetSel);
+        if (targetEl) {
+          const offsetPosition = targetEl.getBoundingClientRect().top + window.scrollY - 94;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+      }
+      dropdown.classList.remove('open');
+    });
+  });
+
+  // 4. POPUP QUESTIONARI
+  const questionariBtn = document.getElementById('questionari-btn');
+  const questionariPopup = document.getElementById('questionari-popup');
+  const questionariWrapper = document.getElementById('questionari-wrapper');
+
+  questionariBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Chiude l'altro popup se aperto
+    mailPopup.classList.remove('open');
+    questionariPopup.classList.toggle('open');
+  });
+
+  // 5. POPUP MAIL
+  const mailBtn = document.getElementById('mail-btn');
+  const mailPopup = document.getElementById('mail-popup');
+  const mailSubmit = document.getElementById('mail-submit');
+  const mailInput = document.getElementById('mail-input');
+  const mailConfirm = document.getElementById('mail-confirm');
+
+  mailBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Chiude l'altro popup se aperto
+    questionariPopup.classList.remove('open');
+    mailPopup.classList.toggle('open');
+    // Focus sull'input quando si apre
+    if (mailPopup.classList.contains('open')) {
+      setTimeout(() => mailInput.focus(), 50);
+    }
+  });
+
+  mailSubmit.addEventListener('click', () => {
+    if (mailInput.value && mailInput.value.includes('@')) {
+      mailConfirm.classList.add('visible');
+      mailInput.style.display = 'none';
+      mailSubmit.style.display = 'none';
+      // Chiude il popup dopo 2.5s
+      setTimeout(() => {
+        mailPopup.classList.remove('open');
+        setTimeout(() => {
+          mailInput.style.display = '';
+          mailSubmit.style.display = '';
+          mailConfirm.classList.remove('visible');
+          mailInput.value = '';
+        }, 300);
+      }, 2500);
+    } else {
+      mailInput.style.borderColor = '#e05252';
+      setTimeout(() => mailInput.style.borderColor = '', 1000);
+    }
+  });
+
+  // Invio con tasto Enter
+  mailInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') mailSubmit.click();
+  });
+
+  // 6. CHIUDI TUTTI I POPUP CLICCANDO FUORI
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) dropdown.classList.remove('open');
+    if (!questionariWrapper.contains(e.target)) questionariPopup.classList.remove('open');
+    if (!document.getElementById('mail-wrapper').contains(e.target)) mailPopup.classList.remove('open');
+  });
+
+  // 7. BOUNCE ANIMATION
+  function attractAttention() {
+    const buttons = document.querySelectorAll('.icon-btn');
+    const randomDelay = Math.random() * (8000 - 5000) + 5000;
+    setTimeout(() => {
+      buttons.forEach((btn, index) => {
+        setTimeout(() => {
+          btn.classList.add('bounce-animation');
+          setTimeout(() => btn.classList.remove('bounce-animation'), 600);
+        }, index * 150);
+      });
+      attractAttention();
+    }, randomDelay);
+  }
+  setTimeout(attractAttention, 3000);
+</script>

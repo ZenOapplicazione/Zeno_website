@@ -1,0 +1,267 @@
+---
+---
+<style>
+  .section-title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    font-family: var(--font-display, inherit);
+    line-height: 1.1;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+  .benefits-section { background: rgb(237, 233, 222); padding: 4rem 2rem 6rem; }
+  .benefits-inner { max-width: 100rem; margin: 0 auto; }
+  .benefits-header { text-align: center; margin-bottom: 4rem; }
+
+  /* ── ROW LAYOUT ── */
+  .benefits-rows { display: flex; flex-direction: column; gap: 2rem; }
+
+  .brow {
+    display: flex;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  /* Alternating: odd rows → image left; even rows → image right */
+  .brow.img-right { flex-direction: row-reverse; }
+
+  /* Image cell */
+  .bcard-image {
+    flex: 1;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #e8f0e3;
+    align-self: stretch;
+    position: relative;
+  }
+  .bcard-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Card cell */
+  .bcard {
+    flex: 1;
+    background: rgb(255,255,255);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid var(--border-card);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bcard-icon {
+    background: rgb(101,155,94,0.30);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .bcard-icon svg { width: 20px; height: 20px; stroke: #2e3a28; stroke-width: 1.5; }
+
+  .bcard h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .bcard p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .bcard-change {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-top: auto;
+  }
+  .bcard-change-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  .bcard-change ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .bcard-change li {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .bcard-change li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #9ca883;
+    flex-shrink: 0;
+  }
+
+  .impact-caption {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    max-width: 700px;
+    margin: 0.8rem auto 0;
+    color: #1f2937;
+  }
+  .impact-caption strong { font-weight: 700; }
+
+  @media (max-width: 768px) {
+    .brow,
+    .brow.img-right { flex-direction: column; }
+    .bcard-image { min-height: 220px; }
+  }
+</style>
+
+<section class="benefits-section">
+  <div class="benefits-inner">
+    <div class="benefits-header fade-up">
+      <h2 class="section-title">Benefici condivisi</h2>
+      <p class="impact-caption">Oltre all'impatto ambientale, creiamo <strong>valore per il territorio e la comunità</strong></p>
+    </div>
+
+    <div class="benefits-rows">
+
+      <!-- ROW 1 — immagine sinistra -->
+      <div class="brow fade-up">
+        <div class="bcard-image">
+          <img src="images/diversita.jpeg" alt="Diversità agricola e resilienza territoriale">
+        </div>
+        <div class="bcard">
+          <div class="bcard-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.16406 23.332H19.8307" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11.6641 23.3346C18.0807 20.418 12.5974 15.868 15.1641 11.668" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M11.0807 10.9677C12.3641 11.901 13.1807 13.5343 13.7641 15.2843C11.4307 15.751 9.68073 15.751 8.16406 14.9343C6.76406 14.2343 5.48073 12.7177 4.66406 10.0343C7.93073 9.451 9.7974 10.0343 11.0807 10.9677Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16.4517 7.0013C15.5622 8.39145 15.1148 10.0185 15.1684 11.668C17.385 11.5513 19.0184 10.968 20.185 10.0346C21.3517 8.86797 22.0517 7.3513 22.1684 4.66797C19.0184 4.78464 17.5017 5.83464 16.4517 7.0013Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Diversità agricola e resilienza territoriale</h3>
+          <p>La grande distribuzione tende a standardizzare varietà e produzioni. I gruppi di acquisto favoriscono produttori che coltivano varietà locali, stagionali e meno industrializzate.</p>
+          <div class="bcard-change">
+            <div class="bcard-change-title">Cosa cambia</div>
+            <ul>
+              <li>Più colture diversificate</li>
+              <li>Meno dipendenza da monoculture intensive</li>
+              <li>Maggiore resilienza climatica del territorio</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2 — immagine destra -->
+      <div class="brow img-right fade-up">
+        <div class="bcard-image">
+          <img src="images/equita.jpeg" alt="Equità economica per i produttori">
+        </div>
+        <div class="bcard">
+          <div class="bcard-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.33594 16.332C13.2019 16.332 16.3359 13.198 16.3359 9.33203C16.3359 5.46604 13.2019 2.33203 9.33594 2.33203C5.46994 2.33203 2.33594 5.46604 2.33594 9.33203C2.33594 13.198 5.46994 16.332 9.33594 16.332Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21.1042 12.0977C22.207 12.5088 23.1884 13.1914 23.9575 14.0824C24.7267 14.9733 25.2587 16.0438 25.5045 17.1949C25.7503 18.346 25.7019 19.5404 25.3637 20.6678C25.0256 21.7952 24.4086 22.8191 23.5698 23.6449C22.7311 24.4706 21.6977 25.0716 20.5651 25.3921C19.4326 25.7126 18.2376 25.7424 17.0905 25.4787C15.9434 25.215 14.8813 24.6663 14.0025 23.8833C13.1236 23.1004 12.4564 22.1085 12.0625 20.9993" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8.16406 7H9.33073V11.6667" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19.4968 16.1914L20.3134 17.0197L17.0234 20.3097" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Equità economica per i produttori</h3>
+          <p>L'intermediazione lunga comprime i margini del produttore. L'acquisto collettivo diretto aumenta la quota di valore che resta sul territorio.</p>
+          <div class="bcard-change">
+            <div class="bcard-change-title">Cosa cambia</div>
+            <ul>
+              <li>Margine più alto al produttore</li>
+              <li>Relazione diretta domanda-offerta</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 3 — immagine sinistra -->
+      <div class="brow fade-up">
+        <div class="bcard-image">
+          <img src="images/benessere_animale.jpeg" alt="Benessere animale">
+        </div>
+        <div class="bcard">
+          <div class="bcard-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.1693 16.3333C23.9076 14.63 25.6693 12.5883 25.6693 9.91667C25.6693 8.21486 24.9932 6.58276 23.7899 5.3794C22.5865 4.17604 20.9544 3.5 19.2526 3.5C17.1993 3.5 15.7526 4.08333 14.0026 5.83333C12.2526 4.08333 10.8059 3.5 8.7526 3.5C7.0508 3.5 5.41869 4.17604 4.21534 5.3794C3.01198 6.58276 2.33594 8.21486 2.33594 9.91667C2.33594 12.6 4.08594 14.6417 5.83594 16.3333L14.0026 24.5L22.1693 16.3333Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Benessere animale e scala produttiva sostenibile</h3>
+          <p>Favoriamo realtà produttive a scala più contenuta, con pratiche meno intensive che rispettano la dignità degli animali che vengono allevati.</p>
+          <div class="bcard-change">
+            <div class="bcard-change-title">Cosa cambia</div>
+            <ul>
+              <li>Filiera più corta</li>
+              <li>Trasporto ridotto</li>
+              <li>Maggiore benessere animale</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 4 — immagine destra -->
+      <div class="brow img-right fade-up">
+        <div class="bcard-image">
+          <img src="images/educazione.jpeg" alt="Educazione al consumo consapevole">
+        </div>
+        <div class="bcard">
+          <div class="bcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <h3>Educazione al consumo consapevole</h3>
+          <p>L'emergenza climatica e il rispetto ambientale devono modificare il nostro comportamento. Mostrare i dati sull'impatto ambientale e sociale di ciò che scegliamo aumenta la qualità delle decisioni.</p>
+          <div class="bcard-change">
+            <div class="bcard-change-title">Cosa cambia</div>
+            <ul>
+              <li>Scelte informate</li>
+              <li>Consapevolezza dei costi reali</li>
+              <li>Riduzione acquisti impulsivi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 5 — immagine sinistra -->
+      <div class="brow fade-up">
+        <div class="bcard-image">
+          <img src="images/coesione.jpeg" alt="Coesione sociale e comunità attiva">
+        </div>
+        <div class="bcard">
+          <div class="bcard-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Coesione sociale e comunità attiva</h3>
+          <p>Il punto di ritiro non è solo logistica: i gruppi creano reti di collaborazione tra cittadini.</p>
+          <div class="bcard-change">
+            <div class="bcard-change-title">Cosa cambia</div>
+            <ul>
+              <li>Coordinamento locale</li>
+              <li>Responsabilità condivisa</li>
+              <li>Economia circolare di quartiere</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

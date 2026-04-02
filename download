@@ -1,0 +1,110 @@
+---
+// src/layouts/BaseLayout.astro
+import Footer from '../components/Footer.astro';
+import '../styles/global.css'; // Importa il tuo nuovo sistema di font e Tailwind 4
+
+const { title = "ZenO | La spesa consapevole, semplificata e condivisa" } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <link rel="icon" type="image/png" href="/logo-zeno.png" />
+  <meta name="generator" content={Astro.generator} />
+  
+  </head>
+<body>
+
+  <main>
+    <slot />
+  </main>
+
+  <Footer />
+
+  <style is:global>
+    /* Reset e Variabili Colore mantenute */
+    :root {
+      --orange: #ff5e14;
+      --forest: #1b4332;
+      --forest-btn: #3e7c59;
+      --bg-light: #e9ebe8;
+      --white: #fff;
+      --navbar-bg: #f6f4ef;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background: var(--bg-light);
+      /* font-family è ora gestito da global.css su body */
+    }
+
+    /* Classi di utilità per i bottoni (usano Inter tramite var(--font-body)) */
+    .btn-primary {
+      padding: 0.8rem 1.8rem;
+      background: var(--forest-btn);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--forest); transform: translateY(-1px); }
+
+    .btn-secondary {
+      padding: 0.75rem 1.8rem;
+      background: var(--forest-btn);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-secondary:hover { background: var(--forest); transform: translateY(-1px); }
+
+    /* Animazioni Fade */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+
+  <script>
+    // Intersection Observer per animazioni al caricamento
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
