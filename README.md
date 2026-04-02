@@ -1,76 +1,43 @@
-// src/pages/api/submit-form.ts
-import type { APIRoute } from 'astro';
+# Astro Starter Kit: Minimal
 
-export const prerender = false;
+```sh
+npm create astro@latest -- --template minimal
+```
 
-// ID del modulo estratto dai sorgenti [cite: 431]
-const FORM_ID   = '1FAIpQLSfXLIVce7KiWoLSxrRejyEIoSn9R7-vnYO6R_mQnADInifldg';
-const FORM_VIEW = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
-const FORM_POST = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-export const POST: APIRoute = async ({ request }) => {
-  try {
-    const body = await request.text();
+## 🚀 Project Structure
 
-    // 1. Carica la pagina del form per ottenere i token di sessione e i cookie [cite: 435]
-    const pageRes  = await fetch(FORM_VIEW, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0' },
-    });
-    const pageHtml = await pageRes.text();
-    const cookies  = pageRes.headers.get('set-cookie') ?? '';
+Inside of your Astro project, you'll see the following folders and files:
 
-    // 2. Estrazione del token fbzx (essenziale per validare la sottomissione) [cite: 435]
-    const fbzx =
-      (pageHtml.match(/\["fbzx"\]\s*=\s*"([^"]+)"/))?.[1] ||
-      (pageHtml.match(/"fbzx":"([^"]+)"/))?.[1] ||
-      (pageHtml.match(/name="fbzx" value="([^"]+)"/))?.[1];
+```text
+/
+├── public/
+├── src/
+│   └── pages/
+│       └── index.astro
+└── package.json
+```
 
-    const input  = new URLSearchParams(body);
-    const output = new URLSearchParams();
+Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
 
-    // 3. COSTRUZIONE PAYLOAD: Usiamo append() invece di set() 
-    // per permettere l'invio di più valori per la stessa chiave (checkbox) [cite: 435]
-    for (const [k, v] of input.entries()) {
-      if (k !== 'fbzx' && k !== 'fvv' && k !== 'pageHistory' && k !== 'draftResponse') {
-        output.append(k, v);
-      }
-    }
+There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
 
-    // 4. Aggiunta dei parametri di sistema necessari a Google [cite: 435]
-    if (fbzx) output.set('fbzx', fbzx);
-    output.set('fvv', '1');
-    output.set('pageHistory', '0');
-    output.set('draftResponse', '%.@.[]]');
+Any static assets, like images, can be placed in the `public/` directory.
 
-    // Debug nel terminale: verifica che le chiavi multiple (es. entry.92554476) siano ripetute
-    console.log("Payload finale inviato a Google:", decodeURIComponent(output.toString()));
+## 🧞 Commands
 
-    // 5. Invio effettivo dei dati a Google Forms [cite: 435, 436]
-    const response = await fetch(FORM_POST, {
-      method:  'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Referer':      FORM_VIEW,
-        'Origin':       'https://docs.google.com',
-        'User-Agent':   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0',
-        ...(cookies ? { 'Cookie': cookies } : {}),
-      },
-      body:     output.toString(),
-      redirect: 'follow',
-    });
+All commands are run from the root of the project, from a terminal:
 
-    console.log('Risposta server Google:', response.status);
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-    return new Response(JSON.stringify({ ok: true, status: response.status }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+## 👀 Want to learn more?
 
-  } catch (err) {
-    console.error('Proxy error:', err);
-    return new Response(JSON.stringify({ ok: false, error: String(err) }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-};
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

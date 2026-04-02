@@ -1,0 +1,30 @@
+@import "@fontsource-variable/inter";
+@import "tailwindcss";
+
+/* Versione Bold (700) */
+@font-face {
+  font-family: 'Cameric';
+  src: url('/fonts/Kamerik105Cyrillic-Bold.ttf') format('truetype');
+  font-weight: 700; /* Identifica il Bold */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Versione Book/Regular (400) */
+@font-face {
+  font-family: 'Cameric';
+  src: url('/fonts/Kamerik105Cyrillic-Book.ttf') format('truetype');
+  font-weight: 400; /* Identifica il Book */
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-display: "Cameric", sans-serif;
+  --font-body: "Inter Variable", sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: var(--font-body);
+}

@@ -1,0 +1,710 @@
+---
+// questionario-produttori.astro – ZenO Producer Questionnaire
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="ZenO | Questionario Produttori">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--text-dark); background: rgb(242, 239, 232); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+    /* NAVBAR */
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--navbar-bg); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.02em; text-decoration: none; color: #ff5e14; }
+    .nav-back { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--text-mid); text-decoration: none; transition: color .2s; }
+    .nav-back:hover { color: var(--forest); }
+
+    /* HERO */
+    .form-hero { background: var(--forest); padding: 4rem 2rem 5rem; text-align: center; }
+    .form-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(13, 204, 13, 0.36); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--white); margin-bottom: 1.5rem; }
+    .form-hero-title { font-family: var(--font-display, inherit); font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; color: var(--white); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .form-hero-sub { font-size: 1rem; font-weight: 300; color: var(--white); opacity: 0.7; max-width: 500px; margin: 0 auto 1.5rem; line-height: 1.6; }
+    .form-hero-meta { display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .meta-pill { display: flex; align-items: center; padding: 0.6rem 1.2rem; gap: 0.4rem; font-size: 0.78rem; color: var(--white); }
+    .meta-pill svg { width: 16px; height: 16px; }
+
+    /* PROGRESS */
+    .progress-wrap { background: rgb(236, 234, 225); padding: 1.2rem 2rem; position: sticky; top: 64px; z-index: 90; border-bottom: 1px solid var(--border-card); }
+    .progress-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; }
+    .progress-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    .progress-track { flex: 1; height: 5px; background: rgba(45,74,45,0.12); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--forest-btn); border-radius: 99px; transition: width .4s cubic-bezier(0.34,1.56,0.64,1); width: 0%; }
+    .progress-pct { font-size: 0.72rem; font-weight: 700; color: var(--forest); white-space: nowrap; min-width: 32px; text-align: right; }
+
+    /* FORM LAYOUT */
+    .form-body { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+    .form-section { margin-bottom: 2.5rem; }
+    .section-label { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.5rem; }
+    .section-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--sage-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-icon svg { width: 18px; height: 18px; stroke: var(--forest); }
+    .section-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--text-dark); }
+    .section-divider { width: 100%; height: 1px; background: var(--border-card); margin-bottom: 2rem; }
+
+    /* CARDS */
+    .q-card { background: var(--white); border: 1px solid var(--border-card); border-radius: 16px; padding: 1.6rem 1.8rem; margin-bottom: 1rem; transition: box-shadow .2s, border-color .2s; }
+    .q-card:focus-within { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(140,166,122,0.15); }
+    .q-label { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.3rem; line-height: 1.4; }
+    .q-hint { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+
+    /* INPUTS */
+    .q-input, .q-textarea { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid rgba(45,74,45,0.15); border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem; color: var(--text-dark); background: var(--cream); outline: none; transition: border-color .2s, background .2s; resize: vertical; }
+    .q-input:focus, .q-textarea:focus { border-color: var(--sage); background: var(--white); }
+    .q-input::placeholder, .q-textarea::placeholder { color: var(--text-muted); }
+    .q-textarea { min-height: 90px; }
+
+    /* OPTIONS */
+    .options-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .options-list.inline { flex-direction: row; flex-wrap: wrap; }
+    .opt { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1rem; border: 1.5px solid rgba(45,74,45,0.12); border-radius: 10px; cursor: pointer; transition: border-color .2s, background .2s; user-select: none; }
+    .opt:hover { border-color: var(--sage); background: var(--sage-pale); }
+    .opt input[type="radio"], .opt input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; flex-shrink: 0; border: 2px solid rgba(45,74,45,0.25); border-radius: 50%; cursor: pointer; transition: border-color .2s, background .2s; position: relative; }
+    .opt input[type="checkbox"] { border-radius: 5px; }
+    .opt input[type="radio"]:checked, .opt input[type="checkbox"]:checked { background: var(--forest-btn); border-color: var(--forest-btn); }
+    .opt input[type="radio"]:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; border-radius: 50%; background: white; }
+    .opt input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(45deg); width: 5px; height: 9px; border-right: 2px solid white; border-bottom: 2px solid white; margin-top: -1px; }
+    .opt:has(input:checked) { border-color: var(--sage); background: var(--sage-pale); }
+    .opt-text { font-size: 0.875rem; color: var(--text-mid); line-height: 1.4; }
+
+    /* "Altro" text field */
+    .altro-input { display: none; margin-top: 0.5rem; width: 100%; padding: 0.55rem 0.85rem; border: 1.5px solid rgba(45,74,45,0.15); border-radius: 8px; font-family: var(--font-body); font-size: 0.85rem; color: var(--text-dark); background: var(--cream); outline: none; transition: border-color .2s; }
+    .altro-input:focus { border-color: var(--sage); background: var(--white); }
+    .opt:has(input:checked) ~ .altro-input,
+    .opt:has(input:checked) .altro-input { display: block; }
+
+    /* SCALE */
+    .scale-wrap { display: flex; flex-direction: column; gap: 0.6rem; }
+    .scale-row { display: flex; align-items: center; gap: 0.75rem; }
+    .scale-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .scale-opts { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .scale-opt { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+    .scale-opt input[type="radio"] { appearance: none; -webkit-appearance: none; width: 28px; height: 28px; border: 2px solid rgba(45,74,45,0.2); border-radius: 8px; cursor: pointer; transition: border-color .2s, background .2s; position: relative; }
+    .scale-opt input[type="radio"]:checked { background: var(--forest-btn); border-color: var(--forest-btn); }
+    .scale-opt input[type="radio"]:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 8px; height: 8px; border-radius: 2px; background: white; }
+    .scale-opt span { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+
+    /* SUBMIT */
+    .submit-section { background: var(--white); border: 1px solid var(--border-card); border-radius: 20px; padding: 2.5rem 2rem; text-align: center; margin-top: 2rem; }
+    .submit-icon { width: 56px; height: 56px; background: var(--sage-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
+    .submit-icon svg { width: 26px; height: 26px; stroke: var(--forest); }
+    .submit-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .submit-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.8rem; line-height: 1.6; }
+    .btn-submit { padding: 1rem 3rem; background: var(--forest-btn); color: white; border: none; border-radius: 12px; font-family: var(--font-body); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 14px rgba(74,103,65,0.25); }
+    .btn-submit:hover { background: var(--forest); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(74,103,65,0.3); }
+    .btn-submit:disabled { background: var(--sage-light); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* SUCCESS */
+    .success-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(26,36,22,0.6); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 2rem; }
+    .success-overlay.show { display: flex; }
+    .success-card { background: var(--white); border-radius: 24px; padding: 3rem 2.5rem; max-width: 440px; width: 100%; text-align: center; animation: popIn .5s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .success-emoji { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
+    .success-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: var(--text-dark); margin-bottom: 0.7rem; }
+    .success-msg { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 2rem; }
+    .btn-close-success { padding: 0.85rem 2.5rem; background: var(--forest-btn); color: white; border: none; border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background .2s; }
+    .btn-close-success:hover { background: var(--forest); }
+
+    /* ERRORS */
+    .q-card.has-error { border-color: #c0392b !important; box-shadow: 0 0 0 3px rgba(192,57,43,0.1) !important; animation: shake .35s cubic-bezier(.36,.07,.19,.97); }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+    .q-error { margin-top: 0.75rem; padding: 0.5rem 0.8rem; background: rgba(192,57,43,0.07); border-radius: 8px; font-size: 0.78rem; color: #c0392b; font-weight: 500; border-left: 3px solid #c0392b; }
+
+    /* FADE */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      .form-hero { padding: 3rem 1.5rem 4rem; }
+      .form-body { padding: 2rem 1rem 5rem; }
+      .navbar { padding: 0 1.2rem; }
+      .q-card { padding: 1.3rem 1.2rem; }
+      .options-list.inline { flex-direction: column; }
+      .scale-opts { gap: 0.25rem; }
+      .scale-opt input[type="radio"] { width: 24px; height: 24px; }
+    }
+  </style>
+
+  <nav class="navbar">
+    <a href="/" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="15 18 9 12 15 6"/></svg>
+      Torna alla home
+    </a>
+    <a href="/" class="nav-logo">Zeno</a>
+  </nav>
+
+  <header class="form-hero">
+    <div class="form-eyebrow">Questionario Produttori</div>
+    <h1 class="form-hero-title">Raccontaci <br>la tua realtà</h1>
+    <p class="form-hero-sub">Le tue esperienze e necessità ci aiutano a costruire una piattaforma <strong>che funzioni davvero per i produttori.</strong></p>
+    <div class="form-hero-meta">
+      <span class="meta-pill">
+        <svg viewBox="0 0 150 152">
+          <path d="M45.4958 145.695C36.4215 141.714 28.5281 136.31 21.8156 129.485C15.1031 122.66 9.78906 114.635 5.87344 105.408C1.95781 96.182 0 86.3236 0 75.8333C0 65.3431 1.95781 55.4847 5.87344 46.2583C9.78906 37.0319 15.1031 29.0063 21.8156 22.1813C28.5281 15.3563 36.4215 9.95313 45.4958 5.97188C54.5701 1.99063 64.266 0 74.5833 0C84.9007 0 94.5965 1.99063 103.671 5.97188C112.745 9.95313 120.639 15.3563 127.351 22.1813C134.064 29.0063 139.378 37.0319 143.293 46.2583C147.209 55.4847 149.167 65.3431 149.167 75.8333C149.167 86.3236 147.209 96.182 143.293 105.408C139.378 114.635 134.064 122.66 127.351 129.485C120.639 136.31 112.745 141.714 103.671 145.695C94.5965 149.676 84.9007 151.667 74.5833 151.667C64.266 151.667 54.5701 149.676 45.4958 145.695ZM116.909 118.869C128.47 107.115 134.25 92.7695 134.25 75.8333C134.25 67.7444 132.758 59.9715 129.775 52.5146C126.792 45.0576 122.503 38.4854 116.909 32.7979L74.5833 75.8333V15.1667C57.9264 15.1667 43.8177 21.0438 32.2573 32.7979C20.6969 44.5521 14.9167 58.8972 14.9167 75.8333C14.9167 92.7695 20.6969 107.115 32.2573 118.869C43.8177 130.623 57.9264 136.5 74.5833 136.5C91.2403 136.5 105.349 130.623 116.909 118.869Z" fill="white"/>
+        </svg>
+        ~8 minuti
+      </span>
+      <span class="meta-pill">
+        <svg viewBox="0 0 166 218">
+          <path d="M20.75 217.875C15.0438 217.875 10.1589 215.843 6.09531 211.78C2.03177 207.716 0 202.831 0 197.125V93.375C0 87.6688 2.03177 82.7839 6.09531 78.7203C10.1589 74.6568 15.0438 72.625 20.75 72.625H31.125V51.875C31.125 37.5229 36.1828 25.2891 46.2984 15.1734C56.4141 5.05781 68.6479 0 83 0C97.3521 0 109.586 5.05781 119.702 15.1734C129.817 25.2891 134.875 37.5229 134.875 51.875V72.625H145.25C150.956 72.625 155.841 74.6568 159.905 78.7203C163.968 82.7839 166 87.6688 166 93.375V197.125C166 202.831 163.968 207.716 159.905 211.78C155.841 215.843 150.956 217.875 145.25 217.875H20.75ZM20.75 197.125H145.25V93.375H20.75V197.125ZM97.6547 159.905C101.718 155.841 103.75 150.956 103.75 145.25C103.75 139.544 101.718 134.659 97.6547 130.595C93.5911 126.532 88.7063 124.5 83 124.5C77.2938 124.5 72.4089 126.532 68.3453 130.595C64.2818 134.659 62.25 139.544 62.25 145.25C62.25 150.956 64.2818 155.841 68.3453 159.905C72.4089 163.968 77.2938 166 83 166C88.7063 166 93.5911 163.968 97.6547 159.905ZM51.875 72.625H114.125V51.875C114.125 43.2292 111.099 35.8802 105.047 29.8281C98.9948 23.776 91.6458 20.75 83 20.75C74.3542 20.75 67.0052 23.776 60.9531 29.8281C54.901 35.8802 51.875 43.2292 51.875 51.875V72.625Z" fill="white"/>
+        </svg>
+        Dati anonimi
+      </span>
+      <span class="meta-pill">
+        <svg viewBox="0 0 64 48">
+          <path d="M22.325 47.0979L0 24.7729L5.58125 19.1917L22.325 35.9354L58.2604 0L63.8417 5.58125L22.325 47.0979Z" fill="white"/>
+        </svg>
+        Risposte opzionali
+      </span>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <span class="progress-label">Completamento</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+  </div>
+
+  <main class="form-body">
+    <form id="zenoForm" novalidate>
+
+      <!-- ── SEZIONE 1: Profilo azienda ── -->
+      <div class="form-section fade-up">
+        <div class="section-label">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <span class="section-title">Profilo azienda</span>
+        </div>
+        <div class="section-divider"></div>
+
+        <!-- Tipo azienda -->
+        <div class="q-card">
+          <div class="q-label">Che tipo di azienda sei?</div>
+          <div class="options-list" id="tipoAziendaList">
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Azienda agricola" /><span class="opt-text">Azienda agricola</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Azienda agricola con trasformazione" /><span class="opt-text">Azienda agricola con trasformazione</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Azienda agricola con allevamento" /><span class="opt-text">Azienda agricola con allevamento</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Cooperativa agricola" /><span class="opt-text">Cooperativa agricola</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Cooperativa sociale di tipo A" /><span class="opt-text">Cooperativa sociale di tipo A</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Cooperativa sociale di tipo B" /><span class="opt-text">Cooperativa sociale di tipo B</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Azienda biologiche o biodinamica" /><span class="opt-text">Azienda biologica o biodinamica</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Artigiano alimentare" /><span class="opt-text">Artigiano alimentare</span></label>
+            <label class="opt"><input type="radio" name="entry.TIPO_AZIENDA" value="Azienda food-tech" /><span class="opt-text">Azienda food-tech</span></label>
+            <label class="opt" id="altroTipoOpt">
+              <input type="radio" name="entry.TIPO_AZIENDA" value="Altro" id="altroTipoRadio" />
+              <span class="opt-text">Altro</span>
+            </label>
+            <input type="text" class="altro-input" id="altroTipoText" name="entry.TIPO_AZIENDA_ALTRO" placeholder="Specifica…" />
+          </div>
+        </div>
+
+        <!-- Dove operi -->
+        <div class="q-card">
+          <div class="q-label">Dove operi? <span style="font-weight:400; color:var(--text-muted); font-size:0.82em">(Comune – Provincia)</span></div>
+          <input type="text" class="q-input" name="entry.DOVE_OPERI" placeholder="es. Bergamo, BG" />
+        </div>
+
+        <!-- Certificazioni -->
+        <div class="q-card">
+          <div class="q-label">Possiedi certificazioni?</div>
+          <div class="q-hint">Seleziona tutte quelle applicabili</div>
+          <div class="options-list">
+            <label class="opt"><input type="checkbox" name="entry.CERTIFICAZIONI" value="Bio" /><span class="opt-text">Bio</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CERTIFICAZIONI" value="Demeter" /><span class="opt-text">Demeter</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CERTIFICAZIONI" value="B Corp" /><span class="opt-text">B Corp</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CERTIFICAZIONI" value="FSC" /><span class="opt-text">FSC</span></label>
+            <label class="opt" id="altroCertOpt">
+              <input type="checkbox" name="entry.CERTIFICAZIONI" value="Altro" id="altroCertCheck" />
+              <span class="opt-text">Altro</span>
+            </label>
+            <input type="text" class="altro-input" id="altroCertText" name="entry.CERTIFICAZIONI_ALTRO" placeholder="Specifica…" />
+          </div>
+        </div>
+
+        <!-- Tipologia prodotti -->
+        <div class="q-card">
+          <div class="q-label">Qual è la tipologia di prodotti venduti?</div>
+          <div class="q-hint">Seleziona tutte quelle applicabili</div>
+          <div class="options-list inline">
+            <label class="opt"><input type="checkbox" name="entry.PRODOTTI" value="Freschi" /><span class="opt-text">Freschi</span></label>
+            <label class="opt"><input type="checkbox" name="entry.PRODOTTI" value="Trasformati" /><span class="opt-text">Trasformati</span></label>
+            <label class="opt"><input type="checkbox" name="entry.PRODOTTI" value="Vino" /><span class="opt-text">Vino</span></label>
+            <label class="opt"><input type="checkbox" name="entry.PRODOTTI" value="Olio" /><span class="opt-text">Olio</span></label>
+            <label class="opt"><input type="checkbox" name="entry.PRODOTTI" value="Prodotti di altre aziende" /><span class="opt-text">Prodotti di altre aziende</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SEZIONE 2: Canali di vendita ── -->
+      <div class="form-section fade-up" style="transition-delay:.05s">
+        <div class="section-label">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.95-1.56l1.65-8.44H6"/>
+            </svg>
+          </div>
+          <span class="section-title">Canali di vendita</span>
+        </div>
+        <div class="section-divider"></div>
+
+        <!-- Canali attuali -->
+        <div class="q-card">
+          <div class="q-label">Attraverso quali canali vendete oggi?</div>
+          <div class="q-hint">Seleziona tutti quelli applicabili</div>
+          <div class="options-list">
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="Mercati locali" /><span class="opt-text">Mercati locali</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="Vendita diretta in azienda" /><span class="opt-text">Vendita diretta in azienda</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="GAS" /><span class="opt-text">GAS</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="E-commerce personale" /><span class="opt-text">E-commerce personale</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="Altri e-commerce" /><span class="opt-text">Altri e-commerce</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="Grossisti" /><span class="opt-text">Grossisti</span></label>
+            <label class="opt"><input type="checkbox" name="entry.CANALI" value="Distribuzione organizzata" /><span class="opt-text">Distribuzione organizzata</span></label>
+          </div>
+        </div>
+
+        <!-- % fatturato GAS -->
+        <div class="q-card">
+          <div class="q-label">Che percentuale di fatturato proviene dai GAS?</div>
+          <div class="q-hint">Opzionale — inserisci un valore approssimativo</div>
+          <input type="text" class="q-input" name="entry.FATTURATO_GAS" placeholder="es. 20%" />
+        </div>
+
+        <!-- Quanti GAS -->
+        <div class="q-card">
+          <div class="q-label">Con quanti GAS collaborate attualmente?</div>
+          <div class="options-list inline">
+            <label class="opt"><input type="radio" name="entry.NUM_GAS" value="0" /><span class="opt-text">0</span></label>
+            <label class="opt"><input type="radio" name="entry.NUM_GAS" value="1-5" /><span class="opt-text">1–5</span></label>
+            <label class="opt"><input type="radio" name="entry.NUM_GAS" value="5 -10" /><span class="opt-text">5–10</span></label>
+            <label class="opt"><input type="radio" name="entry.NUM_GAS" value="Più di 10" /><span class="opt-text">Più di 10</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SEZIONE 3: Gestione ordini ── -->
+      <div class="form-section fade-up" style="transition-delay:.10s">
+        <div class="section-label">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <span class="section-title">Gestione ordini</span>
+        </div>
+        <div class="section-divider"></div>
+
+        <!-- Come gestite gli ordini -->
+        <div class="q-card">
+          <div class="q-label">Come gestite gli ordini dei GAS?</div>
+          <div class="options-list" id="ordiniList">
+            <label class="opt"><input type="radio" name="entry.GESTIONE_ORDINI" value="Excel/Google fogli" /><span class="opt-text">Excel / Google Fogli</span></label>
+            <label class="opt" id="altroOrdiniOpt">
+              <input type="radio" name="entry.GESTIONE_ORDINI" value="Altro" id="altroOrdiniRadio" />
+              <span class="opt-text">Altro</span>
+            </label>
+            <input type="text" class="altro-input" id="altroOrdiniText" name="entry.GESTIONE_ORDINI_ALTRO" placeholder="Specifica…" />
+          </div>
+        </div>
+
+        <!-- Frequenza ordini -->
+        <div class="q-card">
+          <div class="q-label">Ogni quanto è possibile gestire un ordine dello stesso gruppo?</div>
+          <div class="q-hint">Opzionale</div>
+          <input type="text" class="q-input" name="entry.FREQUENZA_ORDINI" placeholder="es. Ogni 2 settimane, mensile…" />
+        </div>
+
+        <!-- Tempo consolidamento -->
+        <div class="q-card">
+          <div class="q-label">Quanto tempo è necessario per il consolidamento degli ordini?</div>
+          <div class="q-hint">Opzionale</div>
+          <input type="text" class="q-input" name="entry.TEMPO_CONSOLIDAMENTO" placeholder="es. 2–3 ore, mezza giornata…" />
+        </div>
+
+        <!-- Procedimento migliorabile -->
+        <div class="q-card">
+          <div class="q-label">C'è un procedimento che potrebbe essere migliorato o automatizzato?</div>
+          <div class="q-hint">Seleziona tutti quelli applicabili</div>
+          <div class="options-list" id="miglioramentoList">
+            <label class="opt"><input type="checkbox" name="entry.MIGLIORAMENTO" value="Fatturazione" /><span class="opt-text">Fatturazione</span></label>
+            <label class="opt"><input type="checkbox" name="entry.MIGLIORAMENTO" value="Documenti di consegna" /><span class="opt-text">Documenti di consegna</span></label>
+            <label class="opt"><input type="checkbox" name="entry.MIGLIORAMENTO" value="Aggiornamento dei database" /><span class="opt-text">Aggiornamento dei database</span></label>
+            <label class="opt"><input type="checkbox" name="entry.MIGLIORAMENTO" value="Pianificazione della produzione" /><span class="opt-text">Pianificazione della produzione</span></label>
+            <label class="opt"><input type="checkbox" name="entry.MIGLIORAMENTO" value="Gestione invenduti" /><span class="opt-text">Gestione invenduti</span></label>
+            <label class="opt"><input type="checkbox" name="entry.MIGLIORAMENTO" value="Registrazione ordini" /><span class="opt-text">Registrazione ordini</span></label>
+            <label class="opt" id="altroMiglOpt">
+              <input type="checkbox" name="entry.MIGLIORAMENTO" value="Altro" id="altroMiglCheck" />
+              <span class="opt-text">Altro</span>
+            </label>
+            <input type="text" class="altro-input" id="altroMiglText" name="entry.MIGLIORAMENTO_ALTRO" placeholder="Specifica…" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SEZIONE 4: Logistica ── -->
+      <div class="form-section fade-up" style="transition-delay:.15s">
+        <div class="section-label">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <span class="section-title">Logistica e distribuzione</span>
+        </div>
+        <div class="section-divider"></div>
+
+
+        <!-- Come gestite le consegne -->
+        <div class="q-card">
+          <div class="q-label">Come gestite le consegne?</div>
+          <div class="options-list inline">
+            <label class="opt"><input type="radio" name="entry.CONSEGNE" value="Consegna diretta" /><span class="opt-text">Consegna diretta</span></label>
+            <label class="opt"><input type="radio" name="entry.CONSEGNE" value="Terzi" /><span class="opt-text">Tramite terzi</span></label>
+          </div>
+        </div>
+
+        <!-- Raggio di consegna -->
+        <div class="q-card">
+          <div class="q-label">Raggio massimo di consegna</div>
+          <input type="text" class="q-input" name="entry.RAGGIO_CONSEGNA" placeholder="es. 50 km, tutta la regione…" />
+        </div>
+      </div>
+
+      <!-- ── SEZIONE 5: Marginalità ── -->
+      <div class="form-section fade-up" style="transition-delay:.18s">
+        <div class="section-label">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+            </svg>
+          </div>
+          <span class="section-title">Marginalità e pricing</span>
+        </div>
+        <div class="section-divider"></div>
+
+
+        <!-- Minimo d'ordine -->
+        <div class="q-card">
+          <div class="q-label">Minimo d'ordine sostenibile per applicare uno sconto</div>
+          <div class="q-hint">Opzionale</div>
+          <input type="text" class="q-input" name="entry.MINIMO_ORDINE" placeholder="es. 200 €, 50 kg…" />
+        </div>
+
+        <!-- Aumentare produzione -->
+        <div class="q-card">
+          <div class="q-label">Per voi è desiderabile aumentare produzione e fatturato?</div>
+          <div class="options-list inline">
+            <label class="opt"><input type="radio" name="entry.AUMENTARE_PROD" value="Sì" /><span class="opt-text">Sì</span></label>
+            <label class="opt"><input type="radio" name="entry.AUMENTARE_PROD" value="No" /><span class="opt-text">No</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SEZIONE 6: ZenO e digitalizzazione ── -->
+      <div class="form-section fade-up" style="transition-delay:.20s">
+        <div class="section-label">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+          </div>
+          <span class="section-title">Digitalizzazione e ZenO</span>
+        </div>
+        <div class="section-divider"></div>
+
+        <!-- Note digitalizzazione -->
+        <div class="q-card">
+          <div class="q-label">Utilizzate software gestionali?</div>
+          <div class="q-hint">Opzionale — quali strumenti digitali usate già</div>
+          <textarea class="q-textarea" name="entry.SOFTWARE" placeholder="es. Gestionale contabile, CRM, fogli Google…"></textarea>
+        </div>
+
+        <!-- Cosa vorreste da ZenO -->
+        <div class="q-card">
+          <div class="q-label">Cosa vorreste da una piattaforma come ZenO?</div>
+          <div class="q-hint">Seleziona tutte quelle applicabili</div>
+          <div class="options-list">
+            <label class="opt"><input type="checkbox" name="entry.DESIDERATA" value="Gestione ordini" /><span class="opt-text">Gestione ordini</span></label>
+            <label class="opt"><input type="checkbox" name="entry.DESIDERATA" value="Aiuto per fatturazione" /><span class="opt-text">Aiuto per fatturazione</span></label>
+            <label class="opt"><input type="checkbox" name="entry.DESIDERATA" value="Pagamenti" /><span class="opt-text">Pagamenti</span></label>
+            <label class="opt"><input type="checkbox" name="entry.DESIDERATA" value="Coordinamento consegne" /><span class="opt-text">Coordinamento consegne</span></label>
+            <label class="opt"><input type="checkbox" name="entry.DESIDERATA" value="Comunicazione diretta con clienti" /><span class="opt-text">Comunicazione diretta con clienti</span></label>
+            <label class="opt"><input type="checkbox" name="entry.DESIDERATA" value="Aumento visibilità azienda" /><span class="opt-text">Aumento visibilità azienda</span></label>
+          </div>
+        </div>
+
+        <!-- Rischi percepiti -->
+        <div class="q-card">
+          <div class="q-label">Individuate dei potenziali rischi in una soluzione come ZenO?</div>
+          <div class="q-hint">Opzionale — siamo qui per ascoltarvi</div>
+          <textarea class="q-textarea" name="entry.RISCHI" placeholder="Scrivi qui la tua risposta…"></textarea>
+        </div>
+
+        <!-- Disponibilità visite -->
+        <div class="q-card">
+          <div class="q-label">Siete disponibili a ricevere visite in azienda dai referenti dei gruppi quando vengono costituiti?</div>
+          <div class="options-list inline">
+            <label class="opt"><input type="radio" name="entry.VISITE" value="Sì" /><span class="opt-text">Sì</span></label>
+            <label class="opt"><input type="radio" name="entry.VISITE" value="No" /><span class="opt-text">No</span></label>
+          </div>
+        </div>
+
+        <!-- Scala utilità piattaforma -->
+        <div class="q-card">
+          <div class="q-label">Quanto sarebbe utile per voi una piattaforma con ordini aggregati, previsione domanda e riduzione della gestione?</div>
+          <div class="q-hint">1 = per niente utile · 5 = estremamente utile</div>
+          <div class="scale-wrap">
+            <div class="scale-opts">
+              <label class="scale-opt"><input type="radio" name="entry.UTILITA" value="1" /><span>1</span></label>
+              <label class="scale-opt"><input type="radio" name="entry.UTILITA" value="2" /><span>2</span></label>
+              <label class="scale-opt"><input type="radio" name="entry.UTILITA" value="3" /><span>3</span></label>
+              <label class="scale-opt"><input type="radio" name="entry.UTILITA" value="4" /><span>4</span></label>
+              <label class="scale-opt"><input type="radio" name="entry.UTILITA" value="5" /><span>5</span></label>
+            </div>
+            <div class="scale-labels">
+              <span>Per niente utile</span>
+              <span>Estremamente utile</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="q-card">
+          <div class="q-label">Se siete interessati a partecipare alla fase pilota gratuita, lasciate una mail per essere ricontattati</div>
+          <div class="q-hint">Opzionale — usata solo per avvisarvi del lancio</div>
+          <input type="email" class="q-input" name="entry.EMAIL" placeholder="vostro@email.com" />
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="submit-section fade-up" style="transition-delay:.25s">
+        <div class="submit-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <div class="submit-title">Quasi fatto!</div>
+        <p class="submit-sub">Le vostre risposte ci aiutano a costruire qualcosa di davvero utile per i produttori. Grazie per il vostro tempo.</p>
+        <button type="submit" class="btn-submit" id="submitBtn">Invia il questionario</button>
+      </div>
+
+    </form>
+  </main>
+
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <span class="success-emoji">🌿</span>
+      <div class="success-title">Grazie mille!</div>
+      <p class="success-msg">Le vostre risposte sono state inviate con successo. Aiuteranno ZenO a costruire un servizio che funzioni davvero per i produttori e le loro comunità.</p>
+      <a href="/" class="btn-close-success">Torna alla home</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('zenoForm');
+
+    // ── ENTRY MAP (nomi locali → entry ID Google Forms) ──
+    // I codici entry._sentinel vanno usati SENZA _sentinel
+    const ENTRY_MAP = {
+      'entry.TIPO_AZIENDA':        'entry.1513251518',
+      'entry.DOVE_OPERI':          'entry.684289151',
+      'entry.CERTIFICAZIONI':      'entry.1518617442',
+      'entry.PRODOTTI':            'entry.887799752',
+      'entry.CANALI':              'entry.1213719826',
+      'entry.FATTURATO_GAS':       'entry.1136991269',
+      'entry.NUM_GAS':             'entry.951969551',
+      'entry.GESTIONE_ORDINI':     'entry.85366835',
+      'entry.FREQUENZA_ORDINI':    'entry.716303712',
+      'entry.TEMPO_CONSOLIDAMENTO':'entry.380024575',
+      'entry.MIGLIORAMENTO':       'entry.1365293826',
+      'entry.CONSEGNE':            'entry.613094316',
+      'entry.RAGGIO_CONSEGNA':     'entry.491690880',
+      'entry.MINIMO_ORDINE':       'entry.497779236',
+      'entry.AUMENTARE_PROD':      'entry.1083259953',
+      'entry.SOFTWARE':            'entry.1109006643',
+      'entry.DESIDERATA':          'entry.824295861',
+      'entry.RISCHI':              'entry.1314224554',
+      'entry.VISITE':              'entry.503805638',
+      'entry.UTILITA':             'entry.1576538096',
+      'entry.EMAIL':               'entry.83001105', // campo email — aggiorna con entry corretto
+    };
+
+    // ── ALTRO: mostra/nascondi campo testo ──
+    function setupAltro(radioOrCheckId, textInputId) {
+      const trigger = document.getElementById(radioOrCheckId);
+      const textEl  = document.getElementById(textInputId);
+      if (!trigger || !textEl) return;
+      const update = () => {
+        textEl.style.display = trigger.checked ? 'block' : 'none';
+        if (!trigger.checked) textEl.value = '';
+      };
+      trigger.addEventListener('change', update);
+      // Per radio: anche gli altri del gruppo devono nascondere il campo
+      if (trigger.type === 'radio') {
+        form.querySelectorAll(`input[name="${trigger.name}"]`).forEach(r => {
+          if (r !== trigger) r.addEventListener('change', update);
+        });
+      }
+      update();
+    }
+    setupAltro('altroTipoRadio',  'altroTipoText');
+    setupAltro('altroOrdiniRadio','altroOrdiniText');
+    setupAltro('altroCertCheck',  'altroCertText');
+    setupAltro('altroMiglCheck',  'altroMiglText');
+
+    // ── PROGRESS BAR ──
+    const TRACKED = [
+      'entry.TIPO_AZIENDA','entry.DOVE_OPERI','entry.CERTIFICAZIONI',
+      'entry.PRODOTTI','entry.CANALI','entry.NUM_GAS',
+      'entry.GESTIONE_ORDINI','entry.MIGLIORAMENTO','entry.CONSEGNE',
+      'entry.RAGGIO_CONSEGNA','entry.AUMENTARE_PROD','entry.DESIDERATA',
+      'entry.VISITE','entry.UTILITA'
+    ];
+    function updateProgress() {
+      const answered = new Set();
+      form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
+          .forEach(i => answered.add(i.name));
+      form.querySelectorAll('input[type=text], input[type=email], input[type=number], textarea')
+          .forEach(i => { if (i.name && i.value.trim()) answered.add(i.name); });
+      const pct = Math.round((answered.size / TRACKED.length) * 100);
+      document.getElementById('progressFill').style.width = Math.min(pct, 100) + '%';
+      document.getElementById('progressPct').textContent  = Math.min(pct, 100) + '%';
+    }
+    form.addEventListener('change', updateProgress);
+    form.addEventListener('input',  updateProgress);
+
+    // ── VALIDAZIONE ──
+    function getCard(name) {
+      const el = form.querySelector(`[name="${name}"]`);
+      return el ? el.closest('.q-card') : null;
+    }
+    function showError(card, msg) {
+      card.classList.add('has-error');
+      if (!card.querySelector('.q-error')) {
+        const d = document.createElement('div');
+        d.className = 'q-error'; d.textContent = '⚠ ' + msg;
+        card.appendChild(d);
+      }
+    }
+    function clearErrors() {
+      form.querySelectorAll('.has-error').forEach(c => {
+        c.classList.remove('has-error');
+        c.querySelectorAll('.q-error').forEach(e => e.remove());
+      });
+    }
+    form.addEventListener('change', e => {
+      const c = e.target.closest('.q-card');
+      if (c) { c.classList.remove('has-error'); c.querySelectorAll('.q-error').forEach(e => e.remove()); }
+    });
+
+    const REQUIRED = [
+      'entry.TIPO_AZIENDA','entry.DOVE_OPERI','entry.PRODOTTI',
+      'entry.CANALI','entry.NUM_GAS','entry.GESTIONE_ORDINI',
+      'entry.CONSEGNE','entry.RAGGIO_CONSEGNA','entry.AUMENTARE_PROD',
+      'entry.DESIDERATA','entry.VISITE','entry.UTILITA'
+    ];
+
+    function validate() {
+      clearErrors();
+      let firstErr = null;
+      let ok = true;
+      for (const name of REQUIRED) {
+        const card = getCard(name);
+        if (!card) continue;
+        const inputs = form.querySelectorAll(`[name="${name}"]`);
+        const type   = inputs[0]?.type;
+        let answered = false;
+        if (type === 'radio' || type === 'checkbox') {
+          answered = !!form.querySelector(`[name="${name}"]:checked`);
+        } else {
+          answered = inputs[0]?.value.trim().length >= 1;
+        }
+        if (!answered) {
+          showError(card, type === 'radio' || type === 'checkbox' ? "Seleziona un'opzione." : 'Campo obbligatorio.');
+          if (!firstErr) firstErr = card;
+          ok = false;
+        }
+      }
+      // email format
+      const emailEl = form.querySelector('[name="entry.EMAIL"]');
+      if (emailEl?.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+        const c = emailEl.closest('.q-card');
+        showError(c, 'Inserisci un indirizzo email valido.');
+        if (!firstErr) firstErr = c;
+        ok = false;
+      }
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return ok;
+    }
+
+    // ── SUBMIT ──
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validate()) return;
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled    = true;
+      btn.textContent = 'Invio in corso…';
+
+      const data   = new FormData(form);
+      const params = new URLSearchParams();
+
+      // Gestione "Altro" con testo aggiuntivo
+      for (const [ourKey, googleKey] of Object.entries(ENTRY_MAP)) {
+        const vals = data.getAll(ourKey).filter(v => v.trim());
+        // Se l'utente ha scelto "Altro" per radio, sostituisce il valore col testo
+        const altroMap = {
+          'entry.TIPO_AZIENDA':    'entry.TIPO_AZIENDA_ALTRO',
+          'entry.GESTIONE_ORDINI': 'entry.GESTIONE_ORDINI_ALTRO',
+        };
+        if (altroMap[ourKey]) {
+          const altroVal = data.get(altroMap[ourKey])?.trim();
+          vals.forEach(v => {
+            params.append(googleKey, v === 'Altro' && altroVal ? 'Altro: ' + altroVal : v);
+          });
+        } else {
+          vals.forEach(v => params.append(googleKey, v));
+        }
+      }
+
+      // Append "Altro" text for checkboxes
+      const certAltro = data.get('entry.CERTIFICAZIONI_ALTRO')?.trim();
+      if (certAltro) params.append('entry.1518617442', 'Altro: ' + certAltro);
+      const miglAltro = data.get('entry.MIGLIORAMENTO_ALTRO')?.trim();
+      if (miglAltro) params.append('entry.1365293826', 'Altro: ' + miglAltro);
+
+      try {
+        const res  = await fetch('/api/submit-form-produttori', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body:    params.toString(),
+        });
+        const json = await res.json();
+        if (json.ok) {
+          document.getElementById('successOverlay').classList.add('show');
+        } else {
+          alert('Errore durante l\'invio. Riprova tra qualche istante.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Errore di rete. Controlla la connessione e riprova.');
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Invia il questionario';
+      }
+    });
+
+    // ── FADE UP ──
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+  </script>
+
+</BaseLayout>
