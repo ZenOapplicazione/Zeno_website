@@ -645,60 +645,66 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     // ── SUBMIT ──
     form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!validate()) return;
+  e.preventDefault();
+  if (!validate()) return;
 
-      const btn = document.getElementById('submitBtn');
-      btn.disabled    = true;
-      btn.textContent = 'Invio in corso…';
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Invio in corso…';
 
-      const data   = new FormData(form);
-      const params = new URLSearchParams();
+  const data = new FormData(form);
+  const params = new URLSearchParams();
 
-      // Gestione "Altro" con testo aggiuntivo
-      for (const [ourKey, googleKey] of Object.entries(ENTRY_MAP)) {
-        const vals = data.getAll(ourKey).filter(v => v.trim());
-        // Se l'utente ha scelto "Altro" per radio, sostituisce il valore col testo
-        const altroMap = {
-          'entry.TIPO_AZIENDA':    'entry.TIPO_AZIENDA_ALTRO',
-          'entry.GESTIONE_ORDINI': 'entry.GESTIONE_ORDINI_ALTRO',
-        };
-        if (altroMap[ourKey]) {
-          const altroVal = data.get(altroMap[ourKey])?.trim();
-          vals.forEach(v => {
-            params.append(googleKey, v === 'Altro' && altroVal ? 'Altro: ' + altroVal : v);
-          });
-        } else {
-          vals.forEach(v => params.append(googleKey, v));
-        }
-      }
+  // 1. Mappatura dei campi come facevi prima [cite: 175]
+  for (const [ourKey, googleKey] of Object.entries(ENTRY_MAP)) {
+    const vals = data.getAll(ourKey).filter(v => v.trim());
+    const altroMap = {
+      'entry.TIPO_AZIENDA': 'entry.TIPO_AZIENDA_ALTRO',
+      'entry.GESTIONE_ORDINI': 'entry.GESTIONE_ORDINI_ALTRO',
+    };
 
-      // Append "Altro" text for checkboxes
-      const certAltro = data.get('entry.CERTIFICAZIONI_ALTRO')?.trim();
-      if (certAltro) params.append('entry.1518617442', 'Altro: ' + certAltro);
-      const miglAltro = data.get('entry.MIGLIORAMENTO_ALTRO')?.trim();
-      if (miglAltro) params.append('entry.1365293826', 'Altro: ' + miglAltro);
+    if (altroMap[ourKey]) {
+      const altroVal = data.get(altroMap[ourKey])?.trim();
+      vals.forEach(v => {
+        params.append(googleKey, v === 'Altro' && altroVal ? 'Altro: ' + altroVal : v);
+      });
+    } else {
+      vals.forEach(v => params.append(googleKey, v));
+    }
+  }
 
-      try {
-        const res  = await fetch('/api/submit-form-produttori', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body:    params.toString(),
-        });
-        const json = await res.json();
-        if (json.ok) {
-          document.getElementById('successOverlay').classList.add('show');
-        } else {
-          alert('Errore durante l\'invio. Riprova tra qualche istante.');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Errore di rete. Controlla la connessione e riprova.');
-      } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Invia il questionario';
-      }
+  // 2. Aggiunta campi Altro per checkbox [cite: 178, 179]
+  const certAltro = data.get('entry.CERTIFICAZIONI_ALTRO')?.trim();
+  if (certAltro) params.append('entry.1518617442', 'Altro: ' + certAltro);
+  const miglAltro = data.get('entry.MIGLIORAMENTO_ALTRO')?.trim();
+  if (miglAltro) params.append('entry.1365293826', 'Altro: ' + miglAltro);
+
+  // 3. INVIO DIRETTO A GOOGLE FORMS
+  const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLScvvwYovq5yB4kJZYcuuEEypdY25B98oAavAhGugnXp-GbuGA/formResponse";
+
+  try {
+    // Usiamo mode: 'no-cors' per evitare il blocco CORS di Google.
+    // Importante: con 'no-cors' non potrai leggere la risposta (sarà opaca), 
+    // ma il dato verrà inviato correttamente.
+    await fetch(GOOGLE_FORM_ACTION, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
     });
+
+    // Se arriviamo qui, consideriamo l'invio riuscito 
+    document.getElementById('successOverlay').classList.add('show');
+  } catch (err) {
+    console.error(err);
+    alert('Errore di connessione. Riprova tra poco.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Invia il questionario';
+  }
+});
 
     // ── FADE UP ──
     const obs = new IntersectionObserver(entries => {
