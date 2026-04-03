@@ -8,69 +8,39 @@ const FORM_ID   = '1FAIpQLScvvwYovq5yB4kJZYcuuEEypdY25B98oAavAhGugnXp-GbuGA';
 const FORM_VIEW = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
 const FORM_POST = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
 
+// src/pages/api/submit-form-produttori.ts
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.text();
-
-    // 1. Carica la pagina del form per ottenere i token di sessione e i cookie [cite: 435]
-    const pageRes  = await fetch(FORM_VIEW, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0' },
-    });
-    const pageHtml = await pageRes.text();
-    const cookies  = pageRes.headers.get('set-cookie') ?? '';
-
-    // 2. Estrazione del token fbzx (essenziale per validare la sottomissione) [cite: 435]
-    const fbzx =
-      (pageHtml.match(/\["fbzx"\]\s*=\s*"([^"]+)"/))?.[1] ||
-      (pageHtml.match(/"fbzx":"([^"]+)"/))?.[1] ||
-      (pageHtml.match(/name="fbzx" value="([^"]+)"/))?.[1];
-
-    const input  = new URLSearchParams(body);
+    const input = new URLSearchParams(body);
     const output = new URLSearchParams();
 
-    // 3. COSTRUZIONE PAYLOAD: Usiamo append() invece di set() 
-    // per permettere l'invio di più valori per la stessa chiave (checkbox) [cite: 435]
+    // Filtra solo i campi entry.XXXX necessari [cite: 143, 144]
     for (const [k, v] of input.entries()) {
-      if (k !== 'fbzx' && k !== 'fvv' && k !== 'pageHistory' && k !== 'draftResponse') {
+      if (k.startsWith('entry.')) {
         output.append(k, v);
       }
     }
 
-    // 4. Aggiunta dei parametri di sistema necessari a Google [cite: 435]
-    if (fbzx) output.set('fbzx', fbzx);
+    // Parametri minimi richiesti da Google
     output.set('fvv', '1');
     output.set('pageHistory', '0');
-    output.set('draftResponse', '%.@.[]]');
 
-    // Debug nel terminale: verifica che le chiavi multiple (es. entry.92554476) siano ripetute
-    console.log("Payload finale inviato a Google:", decodeURIComponent(output.toString()));
-
-    // 5. Invio effettivo dei dati a Google Forms [cite: 435, 436]
     const response = await fetch(FORM_POST, {
-      method:  'POST',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Referer':      FORM_VIEW,
-        'Origin':       'https://zeno-website-one.vercel.app/',
-        'User-Agent':   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0',
-        ...(cookies ? { 'Cookie': cookies } : {}),
+        // NON inserire Referer o Origin se il 403 persiste
       },
-      body:     output.toString(),
-      redirect: 'follow',
+      body: output.toString(),
     });
 
-    console.log('Risposta server Google:', response.status);
-
-    return new Response(JSON.stringify({ ok: true, status: response.status }), {
+    // Se ricevi ancora 403, Google sta bloccando l'IP o richiede fbzx
+    return new Response(JSON.stringify({ ok: response.ok, status: response.status }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
-
   } catch (err) {
-    console.error('Proxy error:', err);
-    return new Response(JSON.stringify({ ok: false, error: String(err) }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ ok: false, error: String(err) }), { status: 500 });
   }
 };
