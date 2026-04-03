@@ -51,7 +51,7 @@ export const POST: APIRoute = async ({ request }) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Referer':      FORM_VIEW,
-        'Origin':       'https://docs.google.com',
+        'Origin':       'https://zeno-website-one.vercel.app/',
         'User-Agent':   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0',
         ...(cookies ? { 'Cookie': cookies } : {}),
       },
