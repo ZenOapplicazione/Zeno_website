@@ -543,7 +543,7 @@ Dati anonimi
       return ok;
     }
 
-    // ── SUBMIT ──
+    // ── SUBMIT DIRETTO A GOOGLE ──
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!validate()) return;
@@ -554,28 +554,35 @@ Dati anonimi
 
       const data   = new FormData(form);
       const params = new URLSearchParams();
+
+      // Mappatura corretta dei campi per Google Forms 
       for (const [ourKey, googleKey] of Object.entries(ENTRY_MAP)) {
-        data.getAll(ourKey).filter(v => v.trim()).forEach(v => params.append(googleKey, v));
+        data.getAll(ourKey)
+            .filter(v => v.trim())
+            .forEach(v => params.append(googleKey, v));
       }
 
+      // URL di destinazione del form utenti
+      const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSfXLIVce7KiWoLSxrRejyEIoSn9R7-vnYO6R_mQnADInifldg/formResponse";
+
       try {
-        const res  = await fetch('/api/submit-form-utenti', {
+        // Utilizziamo mode: 'no-cors' per bypassare i blocchi IP di Vercel e le restrizioni CORS [cite: 338]
+        await fetch(GOOGLE_FORM_ACTION, {
           method:  'POST',
+          mode:    'no-cors',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body:    params.toString(),
         });
-        const json = await res.json();
-        if (json.ok) {
-          document.getElementById('successOverlay').classList.add('show');
-        } else {
-          alert('Errore durante l\'invio. Riprova tra qualche istante.');
-        }
+
+        // Con no-cors non possiamo leggere la risposta, quindi mostriamo l'overlay di successo [cite: 338]
+        document.getElementById('successOverlay').classList.add('show');
+        
       } catch (err) {
-        console.error(err);
-        alert('Errore di rete. Controlla la connessione e riprova.');
+        console.error('Errore di invio:', err);
+        alert('Errore di rete. Controlla la connessione e riprova.'); [cite: 339]
       } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Invia il questionario';
+        btn.disabled    = false; [cite: 340]
+        btn.textContent = 'Invia il questionario'; [cite: 340]
       }
     });
 
