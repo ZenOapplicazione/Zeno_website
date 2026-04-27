@@ -5,7 +5,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="ZenO | Questionario Utenti">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { font-family: var(--font-body); color: var(--text-dark); background: rgb(242, 239, 232); -webkit-font-smoothing: antialiased; min-height: 100vh; }
 
@@ -127,7 +126,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="form-hero-meta">
     
         <span class="meta-pill">
-  <svg  viewBox="0 0 150 152"">
+  <svg  viewBox="0 0 150 152">
 <path d="M45.4958 145.695C36.4215 141.714 28.5281 136.31 21.8156 129.485C15.1031 122.66 9.78906 114.635 5.87344 105.408C1.95781 96.182 0 86.3236 0 75.8333C0 65.3431 1.95781 55.4847 5.87344 46.2583C9.78906 37.0319 15.1031 29.0063 21.8156 22.1813C28.5281 15.3563 36.4215 9.95313 45.4958 5.97188C54.5701 1.99063 64.266 0 74.5833 0C84.9007 0 94.5965 1.99063 103.671 5.97188C112.745 9.95313 120.639 15.3563 127.351 22.1813C134.064 29.0063 139.378 37.0319 143.293 46.2583C147.209 55.4847 149.167 65.3431 149.167 75.8333C149.167 86.3236 147.209 96.182 143.293 105.408C139.378 114.635 134.064 122.66 127.351 129.485C120.639 136.31 112.745 141.714 103.671 145.695C94.5965 149.676 84.9007 151.667 74.5833 151.667C64.266 151.667 54.5701 149.676 45.4958 145.695ZM116.909 118.869C128.47 107.115 134.25 92.7695 134.25 75.8333C134.25 67.7444 132.758 59.9715 129.775 52.5146C126.792 45.0576 122.503 38.4854 116.909 32.7979L74.5833 75.8333V15.1667C57.9264 15.1667 43.8177 21.0438 32.2573 32.7979C20.6969 44.5521 14.9167 58.8972 14.9167 75.8333C14.9167 92.7695 20.6969 107.115 32.2573 118.869C43.8177 130.623 57.9264 136.5 74.5833 136.5C91.2403 136.5 105.349 130.623 116.909 118.869Z" fill="white"/>
 </svg>
 
@@ -135,14 +134,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </span>
     
    <span class="meta-pill">
-    <svg viewBox="0 0 166 218"">
+    <svg viewBox="0 0 166 218">
     <path d="M20.75 217.875C15.0438 217.875 10.1589 215.843 6.09531 211.78C2.03177 207.716 0 202.831 0 197.125V93.375C0 87.6688 2.03177 82.7839 6.09531 78.7203C10.1589 74.6568 15.0438 72.625 20.75 72.625H31.125V51.875C31.125 37.5229 36.1828 25.2891 46.2984 15.1734C56.4141 5.05781 68.6479 0 83 0C97.3521 0 109.586 5.05781 119.702 15.1734C129.817 25.2891 134.875 37.5229 134.875 51.875V72.625H145.25C150.956 72.625 155.841 74.6568 159.905 78.7203C163.968 82.7839 166 87.6688 166 93.375V197.125C166 202.831 163.968 207.716 159.905 211.78C155.841 215.843 150.956 217.875 145.25 217.875H20.75ZM20.75 197.125H145.25V93.375H20.75V197.125ZM97.6547 159.905C101.718 155.841 103.75 150.956 103.75 145.25C103.75 139.544 101.718 134.659 97.6547 130.595C93.5911 126.532 88.7063 124.5 83 124.5C77.2938 124.5 72.4089 126.532 68.3453 130.595C64.2818 134.659 62.25 139.544 62.25 145.25C62.25 150.956 64.2818 155.841 68.3453 159.905C72.4089 163.968 77.2938 166 83 166C88.7063 166 93.5911 163.968 97.6547 159.905ZM51.875 72.625H114.125V51.875C114.125 43.2292 111.099 35.8802 105.047 29.8281C98.9948 23.776 91.6458 20.75 83 20.75C74.3542 20.75 67.0052 23.776 60.9531 29.8281C54.901 35.8802 51.875 43.2292 51.875 51.875V72.625Z" fill="white"/>
     </svg>
 Dati anonimi
     </span>
     
     <span class="meta-pill">
-    <svg viewBox="0 0 64 48""> 
+    <svg viewBox="0 0 64 48">
       <path d="M22.325 47.0979L0 24.7729L5.58125 19.1917L22.325 35.9354L58.2604 0L63.8417 5.58125L22.325 47.0979Z" fill="white"/>
     </svg>
 
@@ -171,13 +170,13 @@ Dati anonimi
         <div class="section-divider"></div>
 
         <div class="q-card">
-          <div class="q-label">Quanti anni hai?</div>
-          <input type="number" class="q-input" name="entry.AGE" placeholder="es. 28" min="13" max="110" />
+          <label class="q-label" for="field-age">Quanti anni hai?</label>
+          <input type="number" class="q-input" id="field-age" name="entry.AGE" placeholder="es. 28" min="13" max="110" aria-required="true" />
         </div>
 
         <div class="q-card">
-          <div class="q-label">Dove vivi? <span style="font-weight:400; color:var(--text-muted); font-size:0.82em">(città / quartiere)</span></div>
-          <input type="text" class="q-input" name="entry.CITY" placeholder="es. Milano, Isola" />
+          <label class="q-label" for="field-city">Dove vivi? <span style="font-weight:400; color:var(--text-muted); font-size:0.82em">(città / quartiere)</span></label>
+          <input type="text" class="q-input" id="field-city" name="entry.CITY" placeholder="es. Milano, Isola" aria-required="true" />
         </div>
 
         <div class="q-card">
@@ -191,8 +190,8 @@ Dati anonimi
         </div>
 
         <div class="q-card">
-          <div class="q-label">Qual è la tua occupazione?</div>
-          <input type="text" class="q-input" name="entry.JOB" placeholder="es. Studente, Designer, Insegnante…" />
+          <label class="q-label" for="field-job">Qual è la tua occupazione?</label>
+          <input type="text" class="q-input" id="field-job" name="entry.JOB" placeholder="es. Studente, Designer, Insegnante…" aria-required="true" />
         </div>
       </div>
 
@@ -229,7 +228,7 @@ Dati anonimi
           </div>
         </div>
 
-        <!-- CHECKBOX: più scelte (opzionale) -->
+        <!-- RADIO: una sola scelta (opzionale) -->
         <div class="q-card">
           <div class="q-label">Se sei vegetariano/a o vegano/a, quali sono state le principali motivazioni?</div>
           <div class="q-hint">Lascia in bianco se non applicabile</div>
@@ -388,15 +387,15 @@ Dati anonimi
 
         <!-- TESTO LIBERO -->
         <div class="q-card">
-          <div class="q-label">Quale sarebbe per te il principale valore aggiunto di una piattaforma così?</div>
-          <textarea class="q-textarea" name="entry.APP_VALUE" placeholder="Scrivi qui la tua risposta…"></textarea>
+          <label class="q-label" for="field-app-value">Quale sarebbe per te il principale valore aggiunto di una piattaforma così?</label>
+          <textarea class="q-textarea" id="field-app-value" name="entry.APP_VALUE" placeholder="Scrivi qui la tua risposta…"></textarea>
         </div>
 
         <!-- EMAIL opzionale -->
         <div class="q-card">
-          <div class="q-label">Lasceresti la tua email per essere ricontattato/a e provare il servizio in anteprima?</div>
+          <label class="q-label" for="field-email">Lasceresti la tua email per essere ricontattato/a e provare il servizio in anteprima?</label>
           <div class="q-hint">Opzionale — usata solo per avvisarti del lancio</div>
-          <input type="email" class="q-input" name="entry.EMAIL" placeholder="tua@email.com" />
+          <input type="email" class="q-input" id="field-email" name="entry.EMAIL" placeholder="tua@email.com" />
         </div>
       </div>
 
@@ -487,7 +486,7 @@ Dati anonimi
       card.classList.add('has-error');
       if (!card.querySelector('.q-error')) {
         const d = document.createElement('div');
-        d.className = 'q-error'; d.textContent = '⚠ ' + msg;
+        d.className = 'q-error'; d.setAttribute('role', 'alert'); d.textContent = '⚠ ' + msg;
         card.appendChild(d);
       }
     }
@@ -579,10 +578,10 @@ Dati anonimi
         
       } catch (err) {
         console.error('Errore di invio:', err);
-        alert('Errore di rete. Controlla la connessione e riprova.'); [cite: 339]
+        alert('Errore di rete. Controlla la connessione e riprova.');
       } finally {
-        btn.disabled    = false; [cite: 340]
-        btn.textContent = 'Invia il questionario'; [cite: 340]
+        btn.disabled    = false;
+        btn.textContent = 'Invia il questionario';
       }
     });
 
