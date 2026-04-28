@@ -1,7 +1,6 @@
 ---
 // questionario-produttori.astro – ZenO Producer Questionnaire
 import BaseLayout from '../layouts/BaseLayout.astro';
-const formEmail = import.meta.env.PUBLIC_FORM_EMAIL;
 ---
 
 <BaseLayout title="ZenO | Questionario Produttori">
@@ -12,7 +11,7 @@ const formEmail = import.meta.env.PUBLIC_FORM_EMAIL;
 
     /* NAVBAR */
     .navbar { position: sticky; top: 0; z-index: 100; background: var(--navbar-bg); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
-    .nav-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--text-dark); letter-spacing: -0.02em; text-decoration: none; color: #ff5e14; }
+    .nav-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: #ff5e14; letter-spacing: -0.02em; text-decoration: none; }
     .nav-back { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--text-mid); text-decoration: none; transition: color .2s; }
     .nav-back:hover { color: var(--forest); }
 
@@ -168,7 +167,7 @@ const formEmail = import.meta.env.PUBLIC_FORM_EMAIL;
   </div>
 
   <main class="form-body">
-    <form id="zenoForm" novalidate data-email={formEmail}>
+    <form id="zenoForm" novalidate>
 
       <!-- ── SEZIONE 1: Profilo azienda ── -->
       <div class="form-section fade-up">

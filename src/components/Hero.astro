@@ -109,7 +109,7 @@
 }
   @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
 
-  .hero-spacer { height: 100vh; }
+  .hero-spacer { height: 100vh; margin: 0; padding: 0; }
 
   @media (max-width: 992px) {
     .navbar-hero { flex-direction: column; text-align: center; padding-top: clamp(2rem, 5dvh, 6rem); min-height: 100dvh; justify-content: flex-end; }
@@ -120,12 +120,13 @@
     .btn-green-dark { width: 100%; padding: 0.9rem 1.2rem; font-size: 0.95rem; }
     .hero-email-row { flex-direction: column; margin-bottom: clamp(0.8rem, 2dvh, 1.5rem); align-self: stretch; gap: 0.7rem; }
     .hero-contact-link { margin-left: 0; margin-top: 0.5rem; }
+    .hero-arrow { display: none; }
     .hero-image { order: 2; flex: 0 0 auto; height: 30dvh; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
     .hero-image img { width: auto; height: 100%; max-width: 100%; margin: 0; object-fit: contain; object-position: bottom center; }
   }
 </style>
 
-<div class="hero-bg-wrapper" id="hero-bg-wrapper"content>
+<div class="hero-bg-wrapper" id="hero-bg-wrapper">
   <div class="navbar-hero" id="navbar-hero">
     
     <div class="hero-image">

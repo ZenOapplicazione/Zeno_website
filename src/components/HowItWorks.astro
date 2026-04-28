@@ -7,6 +7,7 @@
     color: #ffffff;
     font-family: var(--font-body, system-ui, sans-serif);
     padding: clamp(2.5rem, 5vw, 5rem) 0 clamp(2rem, 4vw, 4rem);
+    margin-top: -1px;
   }
 
   .how-header {
@@ -43,8 +44,11 @@
     padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 4vw, 4.5rem) clamp(2rem, 3vw, 3.5rem);
     transition: transform 0.4s ease;
   }
-  .how-card:last-child {
-    margin-right: clamp(1rem, 4vw, 4.5rem);
+  .how-grid::after {
+    content: '';
+    flex-shrink: 0;
+    width: clamp(1rem, 4vw, 4.5rem);
+    min-height: 1px;
   }
 
   /* Card */
@@ -113,7 +117,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 0;
     padding: 0 2rem;
   }
 
@@ -180,6 +184,9 @@
     width: clamp(260px, 18vw, 320px);
   }
   .how-section.no-carousel .how-footer {
+    display: none;
+  }
+  .how-section.no-carousel .how-grid::after {
     display: none;
   }
 </style>
@@ -324,9 +331,14 @@
   }
 
   function setup() {
-    const maxX = getMaxX();
-    if (maxX <= 10) {
+    // Check if all cards fit by comparing total card width to container
+    const cardW = getCardWidth();
+    const totalCardsWidth = allCards.length * cardW;
+    const fits = totalCardsWidth <= carousel.clientWidth + 10;
+
+    if (fits) {
       section.classList.add('no-carousel');
+      grid.style.transform = '';
       buildDots(0);
       return;
     }
