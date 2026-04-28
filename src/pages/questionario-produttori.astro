@@ -1,6 +1,7 @@
 ---
 // questionario-produttori.astro – ZenO Producer Questionnaire
 import BaseLayout from '../layouts/BaseLayout.astro';
+const formEmail = import.meta.env.PUBLIC_FORM_EMAIL;
 ---
 
 <BaseLayout title="ZenO | Questionario Produttori">
@@ -167,7 +168,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <main class="form-body">
-    <form id="zenoForm" novalidate>
+    <form id="zenoForm" novalidate data-email={formEmail}>
 
       <!-- ── SEZIONE 1: Profilo azienda ── -->
       <div class="form-section fade-up">
@@ -509,32 +510,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <script>
     const form = document.getElementById('zenoForm');
 
-    // ── ENTRY MAP (nomi locali → entry ID Google Forms) ──
-    // I codici entry._sentinel vanno usati SENZA _sentinel
-    const ENTRY_MAP = {
-      'entry.TIPO_AZIENDA':        'entry.1513251518',
-      'entry.DOVE_OPERI':          'entry.684289151',
-      'entry.CERTIFICAZIONI':      'entry.1518617442',
-      'entry.PRODOTTI':            'entry.887799752',
-      'entry.CANALI':              'entry.1213719826',
-      'entry.FATTURATO_GAS':       'entry.1136991269',
-      'entry.NUM_GAS':             'entry.951969551',
-      'entry.GESTIONE_ORDINI':     'entry.85366835',
-      'entry.FREQUENZA_ORDINI':    'entry.716303712',
-      'entry.TEMPO_CONSOLIDAMENTO':'entry.380024575',
-      'entry.MIGLIORAMENTO':       'entry.1365293826',
-      'entry.CONSEGNE':            'entry.613094316',
-      'entry.RAGGIO_CONSEGNA':     'entry.491690880',
-      'entry.MINIMO_ORDINE':       'entry.497779236',
-      'entry.AUMENTARE_PROD':      'entry.1083259953',
-      'entry.SOFTWARE':            'entry.1109006643',
-      'entry.DESIDERATA':          'entry.824295861',
-      'entry.RISCHI':              'entry.1314224554',
-      'entry.VISITE':              'entry.503805638',
-      'entry.UTILITA':             'entry.1576538096',
-      'entry.EMAIL':               'entry.83001105', // campo email — aggiorna con entry corretto
-    };
-
     // ── ALTRO: mostra/nascondi campo testo ──
     function setupAltro(radioOrCheckId, textInputId) {
       const trigger = document.getElementById(radioOrCheckId);
@@ -643,7 +618,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       return ok;
     }
 
-    // ── SUBMIT DIRETTO A GOOGLE ──
+    // ── LABEL MAP (nomi campo → domanda leggibile) ──
+    const LABELS = {
+      'entry.TIPO_AZIENDA': 'Tipo di azienda',
+      'entry.TIPO_AZIENDA_ALTRO': 'Tipo di azienda (altro)',
+      'entry.DOVE_OPERI': 'Dove operi',
+      'entry.CERTIFICAZIONI': 'Certificazioni',
+      'entry.CERTIFICAZIONI_ALTRO': 'Certificazioni (altro)',
+      'entry.PRODOTTI': 'Tipologia di prodotti',
+      'entry.CANALI': 'Canali di vendita',
+      'entry.FATTURATO_GAS': 'Percentuale fatturato GAS',
+      'entry.NUM_GAS': 'Numero di GAS serviti',
+      'entry.GESTIONE_ORDINI': 'Come gestisci gli ordini',
+      'entry.GESTIONE_ORDINI_ALTRO': 'Gestione ordini (altro)',
+      'entry.FREQUENZA_ORDINI': 'Frequenza ordini',
+      'entry.TEMPO_CONSOLIDAMENTO': 'Tempo di consolidamento',
+      'entry.MIGLIORAMENTO': 'Cosa vorresti migliorare',
+      'entry.MIGLIORAMENTO_ALTRO': 'Miglioramento (altro)',
+      'entry.CONSEGNE': 'Modalità di consegna',
+      'entry.RAGGIO_CONSEGNA': 'Raggio di consegna',
+      'entry.MINIMO_ORDINE': 'Ordine minimo',
+      'entry.AUMENTARE_PROD': 'Disponibilità ad aumentare produzione',
+      'entry.SOFTWARE': 'Software utilizzati',
+      'entry.DESIDERATA': 'Funzionalità desiderate',
+      'entry.RISCHI': 'Rischi percepiti',
+      'entry.VISITE': 'Disponibilità a visite',
+      'entry.UTILITA': 'Utilità percepita (1-5)',
+      'entry.EMAIL': 'Email',
+    };
+
+    // ── SUBMIT VIA RESEND API ──
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!validate()) return;
@@ -652,51 +656,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       btn.disabled = true;
       btn.textContent = 'Invio in corso…';
 
-      const data = new FormData(form);
-      const params = new URLSearchParams();
-
-      // 1. Mappatura dei campi come facevi prima [cite: 175]
-      for (const [ourKey, googleKey] of Object.entries(ENTRY_MAP)) {
-        const vals = data.getAll(ourKey).filter(v => v.trim());
-        const altroMap = {
-          'entry.TIPO_AZIENDA': 'entry.TIPO_AZIENDA_ALTRO',
-          'entry.GESTIONE_ORDINI': 'entry.GESTIONE_ORDINI_ALTRO',
-        };
-
-        if (altroMap[ourKey]) {
-          const altroVal = data.get(altroMap[ourKey])?.trim();
-          vals.forEach(v => {
-            params.append(googleKey, v === 'Altro' && altroVal ? 'Altro: ' + altroVal : v);
-          });
-        } else {
-          vals.forEach(v => params.append(googleKey, v));
-        }
+      const rawData = new FormData(form);
+      const fields = [];
+      const seen = new Set();
+      for (const [key] of rawData.entries()) {
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const values = rawData.getAll(key).filter(v => v.trim());
+        if (values.length === 0) continue;
+        const label = LABELS[key] || key;
+        fields.push({ label, value: values.join(', ') });
       }
 
-      // 2. Aggiunta campi Altro per checkbox [cite: 178, 179]
-      const certAltro = data.get('entry.CERTIFICAZIONI_ALTRO')?.trim();
-      if (certAltro) params.append('entry.1518617442', 'Altro: ' + certAltro);
-      const miglAltro = data.get('entry.MIGLIORAMENTO_ALTRO')?.trim();
-      if (miglAltro) params.append('entry.1365293826', 'Altro: ' + miglAltro);
-
-      // 3. INVIO DIRETTO A GOOGLE FORMS
-      const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLScvvwYovq5yB4kJZYcuuEEypdY25B98oAavAhGugnXp-GbuGA/formResponse";
-
       try {
-        // Usiamo mode: 'no-cors' per evitare il blocco CORS di Google.
-        // Importante: con 'no-cors' non potrai leggere la risposta (sarà opaca), 
-        // ma il dato verrà inviato correttamente.
-        await fetch(GOOGLE_FORM_ACTION, {
+        const res = await fetch('/api/submit-form', {
           method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: params.toString()
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'produttori', fields }),
         });
 
-        // Se arriviamo qui, consideriamo l'invio riuscito 
-        document.getElementById('successOverlay').classList.add('show');
+        if (res.ok) {
+          document.getElementById('successOverlay').classList.add('show');
+        } else {
+          alert('Errore nell\'invio. Riprova tra qualche istante.');
+        }
       } catch (err) {
         console.error(err);
         alert('Errore di connessione. Riprova tra poco.');

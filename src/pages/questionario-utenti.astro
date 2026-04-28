@@ -1,6 +1,7 @@
 ---
 // questionario-utenti.astro – ZenO User Questionnaire
 import BaseLayout from '../layouts/BaseLayout.astro';
+const formEmail = import.meta.env.PUBLIC_FORM_EMAIL;
 ---
 
 <BaseLayout title="ZenO | Questionario Utenti">
@@ -159,7 +160,7 @@ Dati anonimi
   </div>
 
   <main class="form-body">
-    <form id="zenoForm" novalidate>
+    <form id="zenoForm" novalidate data-email={formEmail}>
 
       <!-- ── SEZIONE 1: Profilo ── -->
       <div class="form-section fade-up">
@@ -424,31 +425,14 @@ Dati anonimi
   <script>
     const form = document.getElementById('zenoForm');
 
-    // ── ENTRY MAP (nomi locali → entry ID Google Forms) ──
-    const ENTRY_MAP = {
-      'entry.AGE':          'entry.1203153178',
-      'entry.CITY':         'entry.438110389',
-      'entry.LIVING':       'entry.150283575',
-      'entry.JOB':          'entry.328911731',
-      'entry.DIET':         'entry.1779094260',
-      'entry.PRIORITY':     'entry.92554476',
-      'entry.VEG_MOTIV':    'entry.1834368713',
-      'entry.MEAT_REDUCE':  'entry.615824105',
-      'entry.ORIGIN_IMP':   'entry.1323312017',
-      'entry.SHOP_WHERE':   'entry.294976187',
-      'entry.MONTHLY_SPEND':'entry.286483963',
-      'entry.BIO_SPEND':    'entry.532213325',
-      'entry.GAS_KNOW':     'entry.1458501142',
-      'entry.CHANGE_WILL':  'entry.1314221130',
-      'entry.PRICE_EXTRA':  'entry.1780889258',
-      'entry.APP_INTEREST': 'entry.1725077528',
-      'entry.COMMISSION':   'entry.106605387',
-      'entry.APP_VALUE':    'entry.1215933150',
-      'entry.EMAIL':        'entry.599207435',
-    };
-
-    // ── PROGRESS BAR ──
-    const FIELD_NAMES = Object.keys(ENTRY_MAP);
+    // ── FIELD NAMES for progress tracking ──
+    const FIELD_NAMES = [
+      'entry.AGE','entry.CITY','entry.LIVING','entry.JOB',
+      'entry.DIET','entry.PRIORITY','entry.VEG_MOTIV','entry.MEAT_REDUCE',
+      'entry.ORIGIN_IMP','entry.SHOP_WHERE','entry.MONTHLY_SPEND','entry.BIO_SPEND',
+      'entry.GAS_KNOW','entry.CHANGE_WILL','entry.PRICE_EXTRA',
+      'entry.APP_INTEREST','entry.COMMISSION','entry.APP_VALUE','entry.EMAIL'
+    ];
     function updateProgress() {
       const answered = new Set();
       form.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked')
@@ -542,7 +526,30 @@ Dati anonimi
       return ok;
     }
 
-    // ── SUBMIT DIRETTO A GOOGLE ──
+    // ── LABEL MAP (nomi campo → domanda leggibile) ──
+    const LABELS = {
+      'entry.AGE': 'Quanti anni hai',
+      'entry.CITY': 'Dove vivi',
+      'entry.LIVING': 'Situazione abitativa',
+      'entry.JOB': 'Occupazione',
+      'entry.DIET': 'Tipo di dieta',
+      'entry.PRIORITY': 'Priorità nella spesa alimentare',
+      'entry.VEG_MOTIV': 'Motivazioni vegetariano/vegano',
+      'entry.MEAT_REDUCE': 'Riduzione consumo carne',
+      'entry.ORIGIN_IMP': 'Importanza provenienza carne/pesce',
+      'entry.SHOP_WHERE': 'Dove fai la spesa',
+      'entry.MONTHLY_SPEND': 'Spesa mensile alimentare',
+      'entry.BIO_SPEND': 'Spesa prodotti bio/etici/locali',
+      'entry.GAS_KNOW': 'Conoscenza GAS',
+      'entry.CHANGE_WILL': 'Disponibilità al cambiamento',
+      'entry.PRICE_EXTRA': 'Quanto in più per prodotti etici',
+      'entry.APP_INTEREST': 'Interesse per app GAS',
+      'entry.COMMISSION': 'Disponibilità a commissione',
+      'entry.APP_VALUE': 'Valore aggiunto piattaforma',
+      'entry.EMAIL': 'Email',
+    };
+
+    // ── SUBMIT VIA RESEND API ──
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!validate()) return;
@@ -551,31 +558,30 @@ Dati anonimi
       btn.disabled    = true;
       btn.textContent = 'Invio in corso…';
 
-      const data   = new FormData(form);
-      const params = new URLSearchParams();
-
-      // Mappatura corretta dei campi per Google Forms 
-      for (const [ourKey, googleKey] of Object.entries(ENTRY_MAP)) {
-        data.getAll(ourKey)
-            .filter(v => v.trim())
-            .forEach(v => params.append(googleKey, v));
+      const rawData = new FormData(form);
+      const fields = [];
+      const seen = new Set();
+      for (const [key] of rawData.entries()) {
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const values = rawData.getAll(key).filter(v => v.trim());
+        if (values.length === 0) continue;
+        const label = LABELS[key] || key;
+        fields.push({ label, value: values.join(', ') });
       }
 
-      // URL di destinazione del form utenti
-      const GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSfXLIVce7KiWoLSxrRejyEIoSn9R7-vnYO6R_mQnADInifldg/formResponse";
-
       try {
-        // Utilizziamo mode: 'no-cors' per bypassare i blocchi IP di Vercel e le restrizioni CORS [cite: 338]
-        await fetch(GOOGLE_FORM_ACTION, {
-          method:  'POST',
-          mode:    'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body:    params.toString(),
+        const res = await fetch('/api/submit-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'utenti', fields }),
         });
 
-        // Con no-cors non possiamo leggere la risposta, quindi mostriamo l'overlay di successo [cite: 338]
-        document.getElementById('successOverlay').classList.add('show');
-        
+        if (res.ok) {
+          document.getElementById('successOverlay').classList.add('show');
+        } else {
+          alert('Errore nell\'invio. Riprova tra qualche istante.');
+        }
       } catch (err) {
         console.error('Errore di invio:', err);
         alert('Errore di rete. Controlla la connessione e riprova.');

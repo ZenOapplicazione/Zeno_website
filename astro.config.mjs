@@ -9,7 +9,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   // Le integrazioni di Astro vanno qui
   integrations: [
-    icon() 
+    icon()
   ],
 
   vite: {
