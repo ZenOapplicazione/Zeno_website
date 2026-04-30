@@ -576,6 +576,17 @@ Dati anonimi
           body: JSON.stringify({ type: 'utenti', fields }),
         });
 
+        const emailVal = form.querySelector('[name="entry.EMAIL"]')?.value?.trim();
+        if (emailVal) {
+          const emailData = new FormData();
+          emailData.append('email', emailVal);
+          fetch('https://formspree.io/f/maqlddnl', {
+            method: 'POST',
+            body: emailData,
+            headers: { 'Accept': 'application/json' },
+          }).catch(() => {});
+        }
+
         if (res.ok) {
           document.getElementById('successOverlay').classList.add('show');
         } else {

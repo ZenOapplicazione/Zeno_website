@@ -668,11 +668,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
 
       try {
+        // Send questionnaire via Resend
         const res = await fetch('/api/submit-form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: 'produttori', fields }),
         });
+
+        // Also subscribe email to Formspree newsletter if provided
+        const emailVal = form.querySelector('[name="entry.EMAIL"]')?.value?.trim();
+        if (emailVal) {
+          const emailData = new FormData();
+          emailData.append('email', emailVal);
+          fetch('https://formspree.io/f/maqlddnl', {
+            method: 'POST',
+            body: emailData,
+            headers: { 'Accept': 'application/json' },
+          }).catch(() => {});
+        }
 
         if (res.ok) {
           document.getElementById('successOverlay').classList.add('show');
