@@ -1,7 +1,7 @@
 <style>
-  .impact-section { background: var(--cream); padding: 4rem 2rem; }
+  .impact-section { background: var(--cream); padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem); }
   .impact-inner { max-width: 80rem; margin: 0 auto; text-align: center; }
-  .impact-header { margin-bottom: 4rem; }
+  .impact-header { margin-bottom: clamp(2rem, 4vw, 4rem); }
   .impact-header .section-title {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 300;
@@ -74,7 +74,7 @@
   .icard-title { font-size: 1.05rem; font-weight: 500; color: #1f2937; font-family: var(--font-body); }
 
   .icard-big-num {
-    font-size: 4.5rem; font-weight: 700; color: #1f2937;
+    font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 700; color: #1f2937;
     line-height: 1; letter-spacing: -0.04em;
     margin-bottom: 1.5rem;
   }
@@ -106,13 +106,16 @@
   }
   .bar-zeno-fill { height: 100%; background: #548F2E; border-radius: 99px; transition: width 1s ease; }
 
-  @media (max-width: 768px) {
-    .impact-grid { grid-template-columns: 1fr; }
-    .icard { min-height: 350px; }
+  @media (max-width: 992px) {
+    .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+    .icard { min-height: 280px; }
     .icard-content-wrapper { transform: translateY(0); }
     .icard-stats { opacity: 1; pointer-events: auto; }
     .icard::before { background: linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.95) 65%, rgba(255,255,255,0) 100%); }
-  
+  }
+  @media (max-width: 576px) {
+    .impact-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .icard { padding: 1.2rem; min-height: 240px; }
   }
 </style>
 

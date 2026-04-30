@@ -4,7 +4,7 @@
 <style>
   .groups-section {
     background-color: #F4F3ED; 
-    padding: 5rem 1.5rem;
+    padding: clamp(2.5rem, 5vw, 5rem) clamp(1rem, 3vw, 1.5rem);
     font-family: var(--font-body, system-ui, -apple-system, sans-serif);
     color: #111827;
   }
@@ -16,13 +16,15 @@
 
   .groups-header {
     text-align: center;
-    margin-bottom: 3.5rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
   }
 
   .groups-header h2 {
     font-family: var(--font-display, inherit);
-    font-size: clamp(2.5rem, 5vw, 4.5rem); 
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
     margin-bottom: 0.5rem;
     color: #2E3A28;
   }
@@ -171,13 +173,14 @@
 
   /* Responsive */
   @media (max-width: 992px) {
-    .groups-grid { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;}
+    .groups-grid { grid-template-columns: 1fr; max-width: 600px; margin: 0 auto; gap: 1.2rem; }
   }
 
   @media (max-width: 576px) {
-    .gcard { padding: 1.2rem; }
-    .gcard-value-box { padding: 1.2rem; }
-    .gcard-head h3 { font-size: 1.2rem; }
+    .groups-grid { gap: 1rem; }
+    .gcard { padding: 1rem; }
+    .gcard-value-box { padding: 1rem; }
+    .gcard-head h3 { font-size: 1.1rem; }
   }
 </style>
 

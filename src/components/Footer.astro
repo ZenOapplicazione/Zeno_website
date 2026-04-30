@@ -126,7 +126,7 @@ const currentYear = new Date().getFullYear();
     font-family: var(--font-body, system-ui, sans-serif);
   }
 
-  .footer-inner { max-width: 1100px; margin: 4rem auto; }
+  .footer-inner { max-width: 1100px; margin: clamp(2rem, 4vw, 4rem) auto; }
   .footer-top { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; margin-bottom: 4rem; }
   .footer-left-title { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900; color: rgb(255,255,255); line-height: 0.95; margin-bottom: 1rem; margin-top: 4rem;}
   .footer-tagline { font-size: 0.95rem; color: rgba(255,255,255,0.65); margin-bottom: 2rem; }
@@ -159,10 +159,14 @@ const currentYear = new Date().getFullYear();
 
   /* Responsive Mobile */
   @media (max-width: 768px) {
-    .footer-top { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
     .footer-cards { grid-template-columns: 1fr; }
     .footer-card.full { grid-column: 1; }
-    footer { padding: 4rem 1.5rem 2rem; }
+    footer { padding: 2.5rem 1rem 1.5rem; }
+    .footer-left-title { font-size: clamp(2rem, 7vw, 3rem); margin-top: 1.5rem; }
+    .footer-card { padding: 1rem; border-radius: 10px; }
+    .footer-card h4 { font-size: 0.88rem; }
+    .footer-right-title { font-size: 1.1rem; }
   }
   @media (max-width: 540px) {
     .footer-email-row { flex-direction: column; }

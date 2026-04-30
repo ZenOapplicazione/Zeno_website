@@ -6,12 +6,13 @@
     font-weight: 300;
     font-family: var(--font-display, inherit);
     line-height: 1.1;
+    letter-spacing: -0.02em;
     color: var(--text-dark);
-    margin-bottom:  1rem;
+    margin-bottom: 1rem;
   }
-  .benefits-section { background: rgb(237, 233, 222); padding: 4rem 2rem 6rem; }
+  .benefits-section { background: rgb(237, 233, 222); padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem) clamp(3rem, 5vw, 6rem); }
   .benefits-inner { max-width: 100rem; margin: 0 auto; }
-  .benefits-header { text-align: center; margin-bottom: 4rem; }
+  .benefits-header { text-align: center; margin-bottom: clamp(2rem, 4vw, 4rem); }
 
   /* ── ROW LAYOUT ── */
   .benefits-rows { display: flex; flex-direction: column; gap: 2rem; }
@@ -124,7 +125,10 @@
   @media (max-width: 768px) {
     .brow,
     .brow.img-right { flex-direction: column; }
-    .bcard-image { min-height: 220px; }
+    .bcard-image { min-height: 180px; }
+    .bcard { padding: 1.2rem; border-radius: 14px; }
+    .bcard h3 { font-size: 1.1rem; }
+    .bcard p { font-size: 0.88rem; }
   }
 </style>
 
