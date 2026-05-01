@@ -28,7 +28,7 @@
 
     .hero-image {
         flex: 1;
-        height: 100vh;
+        height: 100dvh;
         display: flex;
         align-items: flex-end;
         justify-content: flex-start;
@@ -37,18 +37,21 @@
     }
 
     .hero-image img {
-        max-height: 115vh;
-        width: auto;
-        max-width: 150%;
+        max-height: 120vh;
+        max-width: 200%;
         object-fit: contain;
         object-position: bottom right;
-        margin-left: -12vw;
+        margin-left: -15vw;
         margin-right: -5%;
+    }
+
+    .hero-top-mobile {
+        display: none;
     }
 
     .hero-content {
         flex: 1.1;
-        padding: 0 4rem 0 2rem;
+        padding: 2rem 4rem 2rem 2rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -84,18 +87,22 @@
     .hero-btns-row {
         display: flex;
         gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
+        flex-direction: row;
+        margin-bottom: 0;
         will-change: transform, opacity;
+        width: 90%;
     }
 
     /* BOTTONI: Inter Medium */
-    .btn-green-dark {
-        background: #1f4d3a;
-        color: #ffffff;
-        padding: 0.8rem 1.5rem;
-        border: 1px solid #6a8f5a;
-        border-radius: 6px;
+    .btn-produttori,
+    .btn-consumatori {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: stretch;
+        border-radius: 14px;
+        flex: 1;
+        padding: 1.1rem 1.5rem;
         font-family: var(--font-body);
         font-size: 0.95rem;
         font-weight: 500;
@@ -104,30 +111,54 @@
         text-decoration: none;
     }
 
-    .btn-green-dark:hover {
+    .btn-consumatori {
+        background: #1F4D3A;
+        color: #ffffff;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
+    }
+
+    .btn-consumatori:hover {
         background: #122d22;
         transform: translateY(-1px);
     }
 
+    .btn-produttori {
+        background: #FFF;
+        color: #016630;
+        border: 1.52px solid #016630;
+    }
+
+    .btn-produttori:hover {
+        background: #f0f7f3;
+        transform: translateY(-1px);
+    }
+
     .hero-email-row {
+        margin-top: 2rem;
         display: flex;
-        gap: 0.5rem;
-        width: 100%;
-        max-width: 550px;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        width: 90%;
         margin-bottom: 2rem;
         will-change: transform, opacity;
+        padding: 20px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
     }
 
     /* INPUT: Inter Regular */
     .hero-email-row input {
         flex: 1;
-        padding: 0.8rem 1.2rem;
-        border: 1.5px solid #659B5E;
-        border-radius: 6px;
+        min-width: 400px;
+        padding: 12px 16px;
+        border: 1px solid #D1D5DB;
+        border-radius: 8px;
         font-family: var(--font-body);
         font-weight: 400;
         font-size: 0.95rem;
-        background: #ffffff;
+        background: transparent;
         color: #333;
         outline: none;
         transition: border-color .2s;
@@ -139,20 +170,21 @@
 
     /* BOTTONE ISCRIVITI: Inter Medium */
     .btn-green-light {
-        background: #3e7c59;
+        background: #1F6D3A;
         color: #ffffff;
-        padding: 0.8rem 1.5rem;
-        border-radius: 6px;
+        padding: 12px;
+        border-radius: 10px;
         font-family: var(--font-body);
         font-weight: 500;
         font-size: 0.95rem;
         cursor: pointer;
         border: none;
+        width: 100%;
         transition: background .2s;
     }
 
     .btn-green-light:hover {
-        background: #2a563d;
+        background: #185a2f;
     }
 
     /* LINK CONTATTI: Inter Medium */
@@ -160,10 +192,10 @@
         font-family: var(--font-body);
         font-weight: 500;
         color: #ff5e14;
-        font-size: 0.9rem;
-        text-decoration: none;
+        font-size: 1.1rem;
         will-change: opacity;
         padding-top: 8px;
+        text-decoration: underline;
     }
 
     .hero-contact-link:hover {
@@ -212,85 +244,161 @@
     @media (max-width: 992px) {
         .navbar-hero {
             flex-direction: column;
+            align-items: center;
             text-align: center;
-            padding-top: clamp(2rem, 5dvh, 6rem);
+            padding-top: 0;
             min-height: 100dvh;
-            justify-content: flex-end;
+            position: relative;
+            justify-content: flex-start;
+        }
+
+        /* Top section: white bg with just the title */
+        .hero-top-mobile {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+            min-height: 16dvh;
+            background: #F9FAFB;
+            position: relative;
+            z-index: 3;
+            padding: 1rem 2rem 0;
+            margin-bottom: -1px;
+        }
+
+        .hero-top-mobile .hero-title {
+            font-size: clamp(4rem, 10vw, 5rem);
+            margin-bottom: 10px;
+        }
+
+        /* Bottom section: cow background with content */
+        .navbar-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background-image: url('/images/mucca-mobile.png');
+            background-size: min(100%, 450px);
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .hero-image {
+            display: none;
+        }
+
+        /* Hide the title inside hero-content on mobile (shown in hero-top-mobile) */
+        .hero-content .hero-title {
+            display: none;
         }
 
         .hero-content {
-            order: 1;
-            flex: 0 0 auto;
-            padding: 0 3rem;
-            margin-right: 0;
-            margin-bottom: 0;
+            flex: 1;
+            padding: 1.5rem clamp(1.5rem, 5vw, 3rem);
+            margin: 0 auto;
+            justify-content: flex-start;
             align-items: center;
             text-align: center;
             width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-title {
-            font-size: clamp(3.5rem, 12vw, 5rem);
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1.2rem, 3vw, 2rem);
         }
 
         .hero-sub {
             font-size: clamp(1rem, 2.5vw, 1.4rem);
-            margin-top: clamp(0.5rem, 2dvh, 1.5rem);
-            margin-bottom: clamp(1rem, 5dvh, 2rem);
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         .hero-btns-row {
             justify-content: center;
-            margin-bottom: clamp(0.8rem, 2dvh, 1.5rem);
+            align-items: center;
+            align-self: center;
             flex-direction: column;
-            align-self: stretch;
+            max-width: 400px;
+            width: 100%;
             gap: 0.7rem;
+            margin-top: auto;
+            transform: translateY(5dvh);
         }
 
-        .btn-green-dark {
+        .btn-produttori,
+        .btn-consumatori {
             width: 100%;
-            padding: 0.9rem 1.2rem;
-            font-size: 0.95rem;
         }
 
         .hero-email-row {
             flex-direction: column;
-            margin-bottom: clamp(0.8rem, 2dvh, 1.5rem);
-            align-self: stretch;
-            gap: 0.7rem;
+            align-items: flex-start;
+            align-self: center;
+            max-width: 400px;
+            width: 100%;
+            margin-top: 10dvh;
+            padding: 20px;
+            gap: 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
+        }
+
+        .hero-email-row input {
+            width: 100%;
+            flex: none;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            background: transparent;
+            color: #333;
+        }
+
+        .hero-email-row .btn-green-light {
+            width: 100%;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            background: #1F6D3A;
         }
 
         .hero-contact-link {
+            margin-bottom: auto;
             margin-left: 0;
-            margin-top: 0.5rem;
+            margin-top: 10dvh;
         }
 
         .hero-arrow {
             display: none;
         }
+    }
 
-        .hero-image {
-            order: 2;
-            flex: 0 0 auto;
-            height: 30dvh;
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
+    @media (max-width: 375px) {
+        .hero-contact-link {
+            margin-top: 1dvh;
         }
-
-        .hero-image img {
-            width: auto;
-            height: 100%;
-            max-width: 100%;
-            margin: 0;
-            object-fit: contain;
-            object-position: bottom center;
+        .navbar-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background-image: url('/images/mucca-mobile.png');
+            background-size: 100%;
+            background-position: center calc(100% - (1px - 100vw) * 0.25);
+            background-repeat: no-repeat;
+            z-index: 0;
         }
     }
+
 </style>
 
 <div class="hero-bg-wrapper" id="hero-bg-wrapper">
@@ -300,19 +408,23 @@
       <img src="/images/mucca.png" alt="Mucca ZenO" loading="eager" fetchpriority="high"/>
     </div>
 
-    <div class="hero-content">
+    <div class="hero-top-mobile">
       <h1 class="hero-title" id="hero-title">ZenO</h1>
+    </div>
+
+    <div class="hero-content">
+      <h1 class="hero-title hero-title-desktop">ZenO</h1>
       <p class="hero-sub" id="hero-sub">La spesa consapevole,<br>semplificata e condivisa.</p>
 
       <div class="hero-btns-row" id="hero-btns">
-        <a href="/questionario-produttori" class="btn-green-dark">Questionario produttori</a>
-        <a href="/questionario-utenti" class="btn-green-dark">Questionario consumatori</a>
+        <a href="/questionario-utenti" class="btn-consumatori">Questionario consumatori</a>
+        <a href="/questionario-produttori" class="btn-produttori">Questionario produttori</a>
       </div>
 
       <form class="hero-email-row" id="hero-email">
         <input type="email" name="email" id="hero-email-input"
-               placeholder="Inserisci la tua email per restare aggiornato" required>
-        <button type="submit" id="hero-email-btn" class="btn-green-light">Iscriviti</button>
+               placeholder="La tua email" required>
+        <button type="submit" id="hero-email-btn" class="btn-green-light">Ricevi aggiornamenti</button>
       </form>
 
       <script>
@@ -388,7 +500,7 @@
     const raw = Math.min(scrollY / (HERO_H * 0.65), 1);
     const p = easeInOut(raw);
     if (heroWrapper) {
-      heroWrapper.style.height = Math.max(HERO_H - scrollY, NAV_H) + 'px';
+      heroWrapper.style.height = scrollY === 0 ? '100vh' : Math.max(HERO_H - scrollY, NAV_H) + 'px';
       heroWrapper.style.boxShadow = `0 2px 20px rgba(0,0,0,${lerp(0, 0.1, p)})`;
     }
     if (hero) {
