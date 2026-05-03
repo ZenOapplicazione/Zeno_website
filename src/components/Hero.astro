@@ -1,5 +1,6 @@
 ---
-// src/components/Hero.astro
+import { getHero } from '../lib/strapi';
+const hero = await getHero();
 ---
 <style>
     .hero-bg-wrapper {
@@ -404,30 +405,43 @@
 
 </style>
 
+<style define:vars={{ mobileImageUrl: hero.mobileImage.url }}>
+  @media (max-width: 992px) {
+    .navbar-hero::after {
+      background-image: url(var(--mobileImageUrl)) !important;
+    }
+  }
+  @media (max-width: 375px) {
+    .navbar-hero::after {
+      background-image: url(var(--mobileImageUrl)) !important;
+    }
+  }
+</style>
+
 <div class="hero-bg-wrapper" id="hero-bg-wrapper">
   <div class="navbar-hero" id="navbar-hero">
     
     <div class="hero-image">
-      <img src="/images/mucca.png" alt="Mucca ZenO" loading="eager" fetchpriority="high"/>
+      <img src={hero.desktopImage.url} alt={hero.desktopImage.alternativeText || hero.title} loading="eager" fetchpriority="high"/>
     </div>
 
     <div class="hero-top-mobile">
-      <h1 class="hero-title" id="hero-title">ZenO</h1>
+      <h1 class="hero-title" id="hero-title">{hero.title}</h1>
     </div>
 
     <div class="hero-content">
-      <h1 class="hero-title hero-title-desktop">ZenO</h1>
-      <p class="hero-sub" id="hero-sub">La spesa consapevole,<br>semplificata e condivisa.</p>
+      <h1 class="hero-title hero-title-desktop">{hero.title}</h1>
+      <p class="hero-sub" id="hero-sub">{hero.subtitle}</p>
 
       <div class="hero-btns-row" id="hero-btns">
-        <a href="/questionario-utenti" class="btn-consumatori">Questionario consumatori</a>
-        <a href="/questionario-produttori" class="btn-produttori">Questionario produttori</a>
+        {hero.ctaButtons.map((btn) => (
+          <a href={btn.url} class={btn.style === 'primary' ? 'btn-consumatori' : 'btn-produttori'}>{btn.label}</a>
+        ))}
       </div>
 
-      <form class="hero-email-row" id="hero-email">
-        <input type="email" name="email" id="hero-email-input"
-               placeholder="La tua email" required>
-        <button type="submit" id="hero-email-btn" class="btn-green-light">Ricevi aggiornamenti</button>
+      <form class="hero-email-row" id="hero-email" data-formspree="https://formspree.io/f/maqlddnl">
+        <input type="email" name="email" id="hero-email-input" placeholder={hero.emailPlaceholder} required>
+        <button type="submit" id="hero-email-btn" class="btn-green-light">{hero.emailButtonText}</button>
       </form>
 
       <script>
@@ -439,7 +453,8 @@
           const data = new FormData(form);
 
           try {
-            const res = await fetch('https://formspree.io/f/maqlddnl', {
+            const url = form.getAttribute('data-formspree');
+            const res = await fetch(url, {
               method: 'POST',
               body: data,
               headers: {'Accept': 'application/json'}
@@ -461,7 +476,7 @@
         });
       </script>
 
-      <a href="https://wa.me/393388833566?text=Ho%20domande%20su%20Zeno" target="_blank" rel="noopener noreferrer" class="hero-contact-link" id="hero-contact">Hai domande? Scrivici</a>
+      <a href={hero.contactUrl} target="_blank" rel="noopener noreferrer" class="hero-contact-link" id="hero-contact">{hero.contactText}</a>
     </div>
 
     <div class="hero-arrow" id="hero-arrow">
