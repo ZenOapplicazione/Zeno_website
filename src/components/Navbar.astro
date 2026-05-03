@@ -1,7 +1,8 @@
 ---
-// src/components/Navbar.astro
+import { getNavbar } from '../lib/strapi';
+const navbar = await getNavbar();
 ---
-<nav class="navbar-top" id="navbar-top">
+<nav class="navbar-top" id="navbar-top" data-sections={JSON.stringify(navbar.menuItems)}>
   
   <div class="nav-left">
     <div class="dropdown" id="nav-dropdown">
@@ -11,17 +12,15 @@
       </button>
       
       <div class="dropdown-menu" id="dropdown-menu">
-        <button class="dropdown-item" data-target="#top">Home</button>
-        <button class="dropdown-item" data-target=".how-section">Come funziona</button>
-        <button class="dropdown-item" data-target=".groups-section">A chi si rivolge</button>
-        <button class="dropdown-item" data-target=".impact-section">Risparmio ambientale</button>
-        <button class="dropdown-item" data-target=".benefits-section">Valore sociale</button>
+        {navbar.menuItems.map((item) => (
+          <button class="dropdown-item" data-target={item.sectionTarget}>{item.label}</button>
+        ))}
       </div>
     </div>
   </div>
 
   <div class="nav-center">
-    <span class="navbar-logo">ZenO</span>
+    <span class="navbar-logo">{navbar.logo}</span>
   </div>
 
   <div class="nav-right">
@@ -32,8 +31,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9h6m-6 4h6m-6-8h.01"/></svg>
       </button>
       <div class="nav-popup" id="questionari-popup">
-        <a href="/questionario-utenti" class="nav-popup-item">Questionario utenti</a>
-        <a href="/questionario-produttori" class="nav-popup-item">Questionario produttori</a>
+        {navbar.questionnaireLinks.map((link) => (
+          <a href={link.url} class="nav-popup-item">{link.label}</a>
+        ))}
       </div>
     </div>
 
@@ -44,8 +44,8 @@
       </button>
       <div class="nav-popup nav-popup--form" id="mail-popup">
         <p class="nav-popup-title">Resta aggiornato</p>
-        <form id="navbar-email">
-        <input type="email" name="email" id="navbar-mail-input" class="nav-popup-input" placeholder="La tua email" required>
+        <form id="navbar-email" data-formspree={navbar.formspreeUrl}>
+        <input type="email" name="email" id="navbar-mail-input" class="nav-popup-input" placeholder={navbar.emailPlaceholder} required>
         <button type="submit" class="nav-popup-submit" id="navbar-mail-submit">Iscriviti</button>
         </form>
         <p class="nav-popup-confirm" id="mail-confirm">✓ Grazie, ti contatteremo presto!</p>
@@ -58,13 +58,14 @@
         <script>
       document.getElementById('navbar-email').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const form = e.target;
+        const formEl = e.target;
+        const formspreeUrl = formEl.getAttribute('data-formspree');
         const input = document.getElementById('navbar-mail-input');
         const btn = document.getElementById('navbar-mail-submit');
-        const data = new FormData(form);
+        const data = new FormData(formEl);
 
         try {
-          const res = await fetch('https://formspree.io/f/maqlddnl', {
+          const res = await fetch(formspreeUrl, {
             method: 'POST',
             body: data,
             headers: { 'Accept': 'application/json' }
@@ -364,12 +365,8 @@
   const toggleBtn = document.getElementById('dropdown-toggle-btn');
   const items = document.querySelectorAll('.dropdown-item');
 
-  const sections = [
-    { class: '.how-section', name: 'Come funziona' },
-    { class: '.groups-section', name: 'A chi si rivolge' },
-    { class: '.impact-section', name: 'Risparmio ambientale' },
-    { class: '.benefits-section', name: 'Valore sociale' }
-  ];
+  const sectionsData = JSON.parse(navbar.getAttribute('data-sections'));
+  const sections = sectionsData.map(item => ({ class: item.sectionTarget, name: item.label }));
 
   let ticking = false;
 
