@@ -1,3 +1,7 @@
+---
+import { getImpact } from '../lib/strapi';
+const impact = await getImpact();
+---
 <style>
   .impact-section { background: var(--cream); padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem); }
   .impact-inner { max-width: 80rem; margin: 0 auto; text-align: center; }
@@ -122,143 +126,42 @@
 <section class="impact-section">
   <div class="impact-inner">
     <div class="impact-header fade-up">
-      <h2 class="section-title">Ogni ordine collettivo <br>genera impatto</h2>
-      <p class="impact-caption">Risparmio indicativo in riferimento a <strong>1 kg di mele biologiche</strong></p>
+      <h2 class="section-title">{impact.title}</h2>
+      <p class="impact-caption" set:html={impact.caption} />
     </div>
 
     <div class="impact-grid">
 
-      <div class="icard fade-up" style="--card-img: url('/images/carbon_footprint.jpg');">
-        <div class="icard-content-wrapper">
-          <div class="icard-head">
-            <div class="icard-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
-                <line x1="2" y1="22" x2="11" y2="20"></line>
-              </svg>
+      {impact.metrics.map((metric) => (
+        <div class="icard fade-up" style={`--card-img: url('${metric.backgroundImage.url}');`}>
+          <div class="icard-content-wrapper">
+            <div class="icard-head">
+              <div class="icard-icon">
+                <Fragment set:html={metric.icon} />
+              </div>
+              <span class="icard-title">{metric.label}</span>
             </div>
-            <span class="icard-title">Carbon Footprint</span>
-          </div>
-          <div class="icard-big-num">-65%</div>
-          <div class="icard-stats">
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera GDO</span>
-                <span class="stat-val">100kg CO₂</span>
-              </div>
-              <div class="bar-gdo"></div>
-            </div>
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera Zeno</span>
-                <span class="stat-val">35kg CO₂</span>
-              </div>
-              <div class="bar-zeno-wrapper">
-                <div class="bar-zeno-fill" style="width: 35%;"></div>
-              </div>
+            <div class="icard-big-num">{metric.bigNumber}</div>
+            <div class="icard-stats">
+              {metric.stats.map((stat, i) => (
+                <div class="stat-row">
+                  <div class="stat-labels">
+                    <span class="stat-label-title">{stat.label}</span>
+                    <span class="stat-val">{stat.value}{stat.unit}</span>
+                  </div>
+                  {i === 0 ? (
+                    <div class="bar-gdo"></div>
+                  ) : (
+                    <div class="bar-zeno-wrapper">
+                      <div class="bar-zeno-fill" style={`width: ${metric.barPercent}%;`}></div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="icard fade-up" style="--card-img: url('/images/energy_use.png');">
-        <div class="icard-content-wrapper">
-          <div class="icard-head">
-            <div class="icard-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
-            </div>
-            <span class="icard-title">Energy Use</span>
-          </div>
-          <div class="icard-big-num">-58%</div>
-          <div class="icard-stats">
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera GDO</span>
-                <span class="stat-val">100kWh</span>
-              </div>
-              <div class="bar-gdo"></div>
-            </div>
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera Zeno</span>
-                <span class="stat-val">42kWh</span>
-              </div>
-              <div class="bar-zeno-wrapper">
-                <div class="bar-zeno-fill" style="width: 42%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="icard fade-up" style="--card-img: url('/images/food_waste.png');">
-        <div class="icard-content-wrapper">
-          <div class="icard-head">
-            <div class="icard-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path>
-                <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"></path>
-              </svg>
-            </div>
-            <span class="icard-title">Food Waste</span>
-          </div>
-          <div class="icard-big-num">-85%</div>
-          <div class="icard-stats">
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera GDO</span>
-                <span class="stat-val">100%</span>
-              </div>
-              <div class="bar-gdo"></div>
-            </div>
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera Zeno</span>
-                <span class="stat-val">15%</span>
-              </div>
-              <div class="bar-zeno-wrapper">
-                <div class="bar-zeno-fill" style="width: 15%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="icard fade-up" style="--card-img: url('/images/package_waste.png');">
-        <div class="icard-content-wrapper">
-          <div class="icard-head">
-            <div class="icard-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-              </svg>
-            </div>
-            <span class="icard-title">Pack Waste</span>
-          </div>
-          <div class="icard-big-num">-75%</div>
-          <div class="icard-stats">
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera GDO</span>
-                <span class="stat-val">100kg</span>
-              </div>
-              <div class="bar-gdo"></div>
-            </div>
-            <div class="stat-row">
-              <div class="stat-labels">
-                <span class="stat-label-title">Filiera Zeno</span>
-                <span class="stat-val">25kg</span>
-              </div>
-              <div class="bar-zeno-wrapper">
-                <div class="bar-zeno-fill" style="width: 25%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      ))}
 
     </div>
   </div>
