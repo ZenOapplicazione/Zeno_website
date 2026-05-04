@@ -17,7 +17,7 @@ export interface StrapiMedia {
 // --- Shared components ---
 export interface MenuItem {
   label: string;
-  sectionTarget: string;
+  icon: StrapiMedia | null;
 }
 
 export interface Link {
@@ -82,11 +82,16 @@ export interface ContributeCard {
 }
 
 // --- Single types ---
+export interface NavbarQuestionnaire {
+  slug: string;
+  title: string;
+}
+
 export interface NavbarData {
   logo: string;
   menuItems: MenuItem[];
   questionnairePopupTitle: string;
-  questionnaireLinks: Link[];
+  questionnaires: NavbarQuestionnaire[];
   emailPlaceholder: string;
   formspreeUrl: string;
 }

@@ -39,7 +39,10 @@ async function fetchStrapi<T>(endpoint: string, params: Record<string, string> =
 
 // --- Single types ---
 export async function getNavbar(): Promise<NavbarData> {
-  return fetchStrapi<NavbarData>('navbar');
+  return fetchStrapi<NavbarData>('navbar', {
+    'populate[menuItems][populate]': '*',
+    'populate[questionnaires]': '*',
+  });
 }
 
 export async function getHero(): Promise<HeroData> {

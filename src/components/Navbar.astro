@@ -1,19 +1,23 @@
 ---
 import { getNavbar } from '../lib/strapi';
 const navbar = await getNavbar();
+const STRAPI_URL = import.meta.env.STRAPI_API_URL;
 ---
-<nav class="navbar-top" id="navbar-top" data-sections={JSON.stringify(navbar.menuItems)}>
-  
+<nav class="navbar-top" id="navbar-top">
+
   <div class="nav-left">
     <div class="dropdown" id="nav-dropdown">
       <button class="dropdown-btn" id="dropdown-toggle-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         <span id="current-section-name">Menu</span>
       </button>
-      
+
       <div class="dropdown-menu" id="dropdown-menu">
         {navbar.menuItems.map((item) => (
-          <button class="dropdown-item" data-target={item.sectionTarget}>{item.label}</button>
+          <div class="dropdown-item">
+            {item.icon && <img src={`${STRAPI_URL}${item.icon.url}`} alt={item.icon.alternativeText || item.label} class="menu-item-icon" />}
+            <span>{item.label}</span>
+          </div>
         ))}
       </div>
     </div>
@@ -31,8 +35,8 @@ const navbar = await getNavbar();
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9h6m-6 4h6m-6-8h.01"/></svg>
       </button>
       <div class="nav-popup" id="questionari-popup">
-        {navbar.questionnaireLinks.map((link) => (
-          <a href={link.url} class="nav-popup-item">{link.label}</a>
+        {navbar.questionnaires.map((q) => (
+          <a href={`/${q.slug}`} class="nav-popup-item">{q.title}</a>
         ))}
       </div>
     </div>
@@ -191,11 +195,19 @@ const navbar = await getNavbar();
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
   .dropdown-item:hover {
     background: #f4f3ed;
     color: #111827;
     font-weight: 500;
+  }
+  .menu-item-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
   }
 
   /* Nav Right */
@@ -360,17 +372,11 @@ const navbar = await getNavbar();
 
 <script>
   const navbar = document.getElementById('navbar-top');
-  const label = document.getElementById('current-section-name');
   const dropdown = document.getElementById('nav-dropdown');
   const toggleBtn = document.getElementById('dropdown-toggle-btn');
-  const items = document.querySelectorAll('.dropdown-item');
-
-  const sectionsData = JSON.parse(navbar.getAttribute('data-sections'));
-  const sections = sectionsData.map(item => ({ class: item.sectionTarget, name: item.label }));
-
-  let ticking = false;
 
   // 1. SCROLL
+  let ticking = false;
   window.addEventListener('scroll', () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
@@ -379,48 +385,16 @@ const navbar = await getNavbar();
         } else {
           navbar.classList.remove('scrolled');
         }
-
-        let currentName = 'Menu';
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const el = document.querySelector(sections[i].class);
-          if (el) {
-            const rect = el.getBoundingClientRect();
-            if (rect.top <= 150) { 
-              currentName = sections[i].name;
-              break; 
-            }
-          }
-        }
-        if (window.scrollY < 100) currentName = 'Menu';
-        if (label.textContent !== currentName) label.textContent = currentName;
-
         ticking = false;
       });
       ticking = true;
     }
   });
 
-  // 2. MENU NAVIGAZIONE
+  // 2. MENU DROPDOWN
   toggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.toggle('open');
-  });
-
-  // 3. SMOOTH SCROLL
-  items.forEach(item => {
-    item.addEventListener('click', (e) => {
-      const targetSel = e.target.getAttribute('data-target');
-      if (targetSel === '#top' || targetSel === '.hero-spacer') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        const targetEl = document.querySelector(targetSel);
-        if (targetEl) {
-          const offsetPosition = targetEl.getBoundingClientRect().top + window.scrollY - 94;
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-        }
-      }
-      dropdown.classList.remove('open');
-    });
   });
 
   // 4. POPUP QUESTIONARI
