@@ -15,9 +15,9 @@ const STRAPI_TOKEN = import.meta.env.STRAPI_API_TOKEN;
 
 async function fetchStrapi<T>(endpoint: string, params: Record<string, string> = {}): Promise<T> {
   const url = new URL(`${STRAPI_URL}/api/${endpoint}`);
-  // Default: populate all nested relations
-  if (!params.populate) {
-    url.searchParams.set('populate', 'deep');
+  // Populate all first-level relations
+  if (!Object.keys(params).some(k => k.includes('populate'))) {
+    url.searchParams.set('populate', '*');
   }
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
@@ -55,11 +55,15 @@ export async function getGroups(): Promise<GroupsData> {
 }
 
 export async function getImpact(): Promise<ImpactData> {
-  return fetchStrapi<ImpactData>('impact');
+  return fetchStrapi<ImpactData>('impact', {
+    'populate[metrics][populate]': '*',
+  });
 }
 
 export async function getBenefits(): Promise<BenefitsData> {
-  return fetchStrapi<BenefitsData>('benefits');
+  return fetchStrapi<BenefitsData>('benefits', {
+    'populate[rows][populate]': '*',
+  });
 }
 
 export async function getFooter(): Promise<FooterData> {
@@ -68,13 +72,20 @@ export async function getFooter(): Promise<FooterData> {
 
 // --- Collection types ---
 export async function getQuestionnaires(): Promise<QuestionnaireData[]> {
-  return fetchStrapi<QuestionnaireData[]>('questionnaires');
+  return fetchStrapi<QuestionnaireData[]>('questionnaires', {
+    'populate[sections][populate]': '*',
+    'populate[metaInfo]': '*',
+  });
 }
 
 export async function getQuestionnaireBySlug(slug: string): Promise<QuestionnaireData> {
   const results = await fetchStrapi<QuestionnaireData[]>(
     'questionnaires',
-    { 'filters[slug][$eq]': slug }
+    {
+      'filters[slug][$eq]': slug,
+      'populate[sections][populate]': '*',
+      'populate[metaInfo]': '*',
+    }
   );
   if (!results || results.length === 0) {
     throw new Error(`Questionnaire not found: ${slug}`);
