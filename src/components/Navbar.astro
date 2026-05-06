@@ -1,7 +1,6 @@
 ---
 import { getNavbar } from '../lib/strapi';
 const navbar = await getNavbar();
-const STRAPI_URL = import.meta.env.STRAPI_API_URL;
 ---
 <nav class="navbar-top" id="navbar-top">
 
@@ -15,7 +14,7 @@ const STRAPI_URL = import.meta.env.STRAPI_API_URL;
       <div class="dropdown-menu" id="dropdown-menu">
         {navbar.menuItems.map((item) => (
           <div class="dropdown-item">
-            {item.icon && <img src={`${STRAPI_URL}${item.icon.url}`} alt={item.icon.alternativeText || item.label} class="menu-item-icon" />}
+            {item.icon && <img src={item.icon.url} alt={item.icon.alternativeText || item.label} class="menu-item-icon" />}
             <span>{item.label}</span>
           </div>
         ))}

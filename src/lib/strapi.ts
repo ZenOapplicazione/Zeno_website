@@ -41,7 +41,8 @@ async function fetchStrapi<T>(endpoint: string, params: Record<string, string> =
 export async function getNavbar(): Promise<NavbarData> {
   return fetchStrapi<NavbarData>('navbar', {
     'populate[menuItems][populate]': '*',
-    'populate[questionnaires]': '*',
+    'populate[questionnaires][fields][0]': 'slug',
+    'populate[questionnaires][fields][1]': 'title',
   });
 }
 
@@ -50,11 +51,15 @@ export async function getHero(): Promise<HeroData> {
 }
 
 export async function getHowItWorks(): Promise<HowItWorksData> {
-  return fetchStrapi<HowItWorksData>('how-it-works');
+  return fetchStrapi<HowItWorksData>('how-it-works', {
+    'populate[steps][populate]': '*',
+  });
 }
 
 export async function getGroups(): Promise<GroupsData> {
-  return fetchStrapi<GroupsData>('groups-section');
+  return fetchStrapi<GroupsData>('groups-section', {
+    'populate[cards][populate]': '*',
+  });
 }
 
 export async function getImpact(): Promise<ImpactData> {
@@ -70,14 +75,17 @@ export async function getBenefits(): Promise<BenefitsData> {
 }
 
 export async function getFooter(): Promise<FooterData> {
-  return fetchStrapi<FooterData>('footer');
+  return fetchStrapi<FooterData>('footer', {
+    'populate[contributeCards][populate]': '*',
+  });
 }
 
 // --- Collection types ---
 export async function getQuestionnaires(): Promise<QuestionnaireData[]> {
   return fetchStrapi<QuestionnaireData[]>('questionnaires', {
-    'populate[sections][populate]': '*',
-    'populate[metaInfo]': '*',
+    'populate[0]': 'sections.fields.options',
+    'populate[1]': 'sections.icon',
+    'populate[2]': 'metaInfo.icon',
   });
 }
 
@@ -86,8 +94,9 @@ export async function getQuestionnaireBySlug(slug: string): Promise<Questionnair
     'questionnaires',
     {
       'filters[slug][$eq]': slug,
-      'populate[sections][populate]': '*',
-      'populate[metaInfo]': '*',
+      'populate[0]': 'sections.fields.options',
+      'populate[1]': 'sections.icon',
+      'populate[2]': 'metaInfo.icon',
     }
   );
   if (!results || results.length === 0) {

@@ -32,13 +32,13 @@ export interface CTAButton {
 }
 
 export interface Step {
-  icon: string;
+  icon: StrapiMedia | null;
   title: string;
   description: string;
 }
 
 export interface GroupCard {
-  icon: string;
+  icon: StrapiMedia | null;
   title: string;
   color: string;
   checkColor: string;
@@ -54,7 +54,7 @@ export interface Stat {
 }
 
 export interface MetricCard {
-  icon: string;
+  icon: StrapiMedia | null;
   backgroundImage: StrapiMedia;
   bigNumber: string;
   label: string;
@@ -67,7 +67,7 @@ export interface Change {
 }
 
 export interface BenefitRow {
-  icon: string;
+  icon: StrapiMedia | null;
   title: string;
   image: StrapiMedia;
   description: string;
@@ -78,7 +78,7 @@ export interface ContributeCard {
   title: string;
   description: string;
   url: string;
-  icon: string;
+  icon: StrapiMedia | null;
 }
 
 // --- Single types ---
@@ -101,11 +101,9 @@ export interface HeroData {
   subtitle: string;
   desktopImage: StrapiMedia;
   mobileImage: StrapiMedia;
-  ctaButtons: CTAButton[];
-  emailPlaceholder: string;
-  emailButtonText: string;
-  contactText: string;
-  contactUrl: string;
+  whatsappText: string;
+  whatsappLink: string;
+  whatsappButtonText: string;
 }
 
 export interface HowItWorksData {
@@ -164,17 +162,19 @@ export interface FormField {
   scaleMax?: number;
   conditionalOn?: string;
   conditionalValue?: string;
-  options?: FieldOption[];
+  options: FieldOption[];
+  order: number;
 }
 
 export interface FormSection {
   title: string;
-  icon: string;
+  icon: StrapiMedia | null;
+  order: number;
   fields: FormField[];
 }
 
 export interface MetaTag {
-  icon: string;
+  icon: StrapiMedia | null;
   text: string;
 }
 

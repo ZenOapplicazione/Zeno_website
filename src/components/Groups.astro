@@ -1,6 +1,8 @@
 ---
 import { getGroups } from '../lib/strapi';
+import { fetchSvgInline } from '../lib/svg';
 const groups = await getGroups();
+const cardSvgs = await Promise.all(groups.cards.map(c => fetchSvgInline(c.icon?.url)));
 ---
 <style>
   .groups-section {
@@ -79,7 +81,7 @@ const groups = await getGroups();
     color: #ffffff; 
   }
 
-  .gcard-icon svg {
+  .gcard-icon :global(svg) {
     width: 24px;
     height: 24px;
   }
@@ -193,11 +195,11 @@ const groups = await getGroups();
     </div>
 
     <div class="groups-grid">
-      {groups.cards.map((card) => (
+      {groups.cards.map((card, i) => (
         <div class="gcard fade-up" style={`--card-color: ${card.color}; --check-color: ${card.checkColor};`}>
           <div class="gcard-head">
             <div class="gcard-icon">
-              <Fragment set:html={card.icon} />
+              <Fragment set:html={cardSvgs[i]} />
             </div>
             <h3>{card.title}</h3>
           </div>

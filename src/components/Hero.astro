@@ -1,7 +1,10 @@
 ---
 import { getHero } from '../lib/strapi';
+import { marked } from 'marked';
 const hero = await getHero();
+const whatsappHtml = hero.whatsappText ? marked.parse(hero.whatsappText) : '';
 ---
+
 <style>
     .hero-bg-wrapper {
         position: fixed;
@@ -62,7 +65,6 @@ const hero = await getHero();
         margin-right: 10%;
     }
 
-    /* TITOLO: Cameric Bold */
     .hero-title {
         font-family: var(--font-display);
         font-size: clamp(5rem, 8.5vw, 9rem);
@@ -73,7 +75,6 @@ const hero = await getHero();
         will-change: transform, opacity;
     }
 
-    /* SOTTOTITOLO: Inter Medium */
     .hero-sub {
         font-family: var(--font-body);
         font-weight: 400;
@@ -85,122 +86,71 @@ const hero = await getHero();
         will-change: transform, opacity;
     }
 
-    .hero-btns-row {
+    /* WhatsApp Card */
+    .whatsapp-card {
         display: flex;
-        gap: 1rem;
-        flex-direction: row;
-        margin-bottom: 0;
-        will-change: transform, opacity;
+        align-items: center;
+        gap: 1.2rem;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 16px;
+        padding: 1.5rem 1.8rem;
         width: 90%;
+        max-width: 520px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        will-change: transform, opacity;
     }
 
-    /* BOTTONI: Inter Medium */
-    .btn-produttori,
-    .btn-consumatori {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        align-self: stretch;
-        border-radius: 14px;
+    .whatsapp-text {
         flex: 1;
-        padding: 1.1rem 1.5rem;
         font-family: var(--font-body);
-        font-size: 0.95rem;
-        font-weight: 500;
+        font-size: 0.92rem;
+        color: #333;
+        line-height: 1.55;
+        text-align: left;
+    }
+
+    .whatsapp-text :global(strong) {
+        font-weight: 700;
+    }
+
+    .whatsapp-text :global(p) {
+        margin: 0 0 0.3rem 0;
+    }
+
+    .whatsapp-text :global(p:last-child) {
+        margin-bottom: 0;
+    }
+
+    .whatsapp-icon-btn {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #25D366;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
         cursor: pointer;
-        transition: background .2s, transform .15s;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         text-decoration: none;
     }
 
-    .btn-consumatori {
-        background: #1F4D3A;
-        color: #ffffff;
-        border: 1.52px solid #1F4D3A;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.10);
+    .whatsapp-icon-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
     }
 
-    .btn-consumatori:hover {
-        background: #122d22;
-        transform: translateY(-1px);
+    .whatsapp-icon-btn svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
     }
 
-    .btn-produttori {
-        background: #FFF;
-        color: #016630;
-        border: 1.52px solid #016630;
-    }
-
-    .btn-produttori:hover {
-        background: #f0f7f3;
-        transform: translateY(-1px);
-    }
-
-    .hero-email-row {
-        margin-top: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-        width: 90%;
-        margin-bottom: 2rem;
-        will-change: transform, opacity;
-        padding: 20px;
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.5);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
-    }
-
-    /* INPUT: Inter Regular */
-    .hero-email-row input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 1px solid #D1D5DB;
-        border-radius: 8px;
-        font-family: var(--font-body);
-        font-weight: 400;
-        font-size: 0.95rem;
-        background: transparent;
-        color: #333;
-        outline: none;
-        transition: border-color .2s;
-    }
-
-    .hero-email-row input:focus {
-        border-color: #2a563d;
-    }
-
-    /* BOTTONE ISCRIVITI: Inter Medium */
-    .btn-green-light {
-        background: #1F6D3A;
-        color: #ffffff;
-        padding: 12px;
-        border-radius: 10px;
-        font-family: var(--font-body);
-        font-weight: 500;
-        font-size: 0.95rem;
-        cursor: pointer;
-        border: none;
-        transition: background .2s;
-        min-width: 250px;
-    }
-
-    .btn-green-light:hover {
-        background: #185a2f;
-    }
-
-    /* LINK CONTATTI: Inter Medium */
-    .hero-contact-link {
-        font-family: var(--font-body);
-        font-weight: 600;
-        color: #ff5e14;
-        font-size: 1.3rem;
-        will-change: opacity;
-        padding-top: 8px;
-        text-decoration: underline;
-    }
-
-    .hero-contact-link:hover {
-        text-decoration: underline;
+    /* Mobile full button (hidden on desktop) */
+    .whatsapp-full-btn {
+        display: none;
     }
 
     .hero-arrow {
@@ -220,20 +170,9 @@ const hero = await getHero();
         stroke-width: 2.5;
     }
 
-    .hero-email-success {
-        font-size: 1rem;
-        color: #2e3a28;
-        font-weight: 500;
-        margin: 0 auto;
-    }
-
     @keyframes bounce {
-        0%, 100% {
-            transform: translateX(-50%) translateY(0);
-        }
-        50% {
-            transform: translateX(-50%) translateY(8px);
-        }
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(8px); }
     }
 
     .hero-spacer {
@@ -253,7 +192,6 @@ const hero = await getHero();
             justify-content: flex-start;
         }
 
-        /* Top section: white bg with just the title */
         .hero-top-mobile {
             display: flex;
             align-items: flex-end;
@@ -271,7 +209,6 @@ const hero = await getHero();
             margin-bottom: 10px;
         }
 
-        /* Bottom section: cow background with content */
         .navbar-hero::after {
             content: '';
             position: absolute;
@@ -281,7 +218,7 @@ const hero = await getHero();
             bottom: 0;
             width: 100%;
             opacity: 0.8;
-            background-image: url('/images/mucca-mobile.png');
+            background-image: var(--mobileImageUrl);
             background-size: min(100%, 450px);
             background-position: center calc(100% - (200px - 100vw) * 0.1);
             background-repeat: no-repeat;
@@ -292,7 +229,6 @@ const hero = await getHero();
             display: none;
         }
 
-        /* Hide the title inside hero-content on mobile (shown in hero-top-mobile) */
         .hero-content .hero-title {
             display: none;
         }
@@ -319,62 +255,50 @@ const hero = await getHero();
             margin-bottom: 0;
         }
 
-        .hero-btns-row {
-            justify-content: center;
+        .whatsapp-card {
+            flex-direction: column;
+            align-items: stretch;
+            text-align: left;
+            width: 100%;
+            max-width: 400px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .whatsapp-icon-btn {
+            display: none;
+        }
+
+        .whatsapp-full-btn {
+            display: flex;
             align-items: center;
-            align-self: center;
-            flex-direction: column;
-            max-width: 400px;
+            justify-content: center;
+            gap: 0.6rem;
             width: 100%;
-            gap: 0.7rem;
-            margin-top: auto;
-            transform: translateY(5dvh);
+            padding: 0.9rem 1.5rem;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            margin-top: 0.5rem;
         }
 
-        .btn-produttori,
-        .btn-consumatori {
-            width: 100%;
+        .whatsapp-full-btn:hover {
+            background: #1EB954;
+            transform: translateY(-1px);
         }
 
-        .hero-email-row {
-            flex-direction: column;
-            align-items: flex-start;
-            align-self: center;
-            max-width: 400px;
-            width: 100%;
-            margin-top: 11dvh;
-            padding: 20px;
-            gap: 12px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.92);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -2px rgba(0, 0, 0, 0.10);
-        }
-
-        .hero-email-row input {
-            width: 100%;
-            min-width: auto;
-            flex: none;
-            border: 1px solid #D1D5DB;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            background: transparent;
-            color: #333;
-        }
-
-        .hero-email-row .btn-green-light {
-            width: 100%;
-            max-width: none;
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 0.95rem;
-            background: rgba(31, 109, 58, 0.85);
-        }
-
-        .hero-contact-link {
-            margin-bottom: auto;
-            margin-left: 0;
-            margin-top: 10dvh;
+        .whatsapp-full-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
         }
 
         .hero-arrow {
@@ -383,44 +307,19 @@ const hero = await getHero();
     }
 
     @media (max-width: 375px) {
-        .hero-contact-link {
-            margin-top: 1dvh;
-        }
         .navbar-hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            opacity: 0.8;
-            background-image: url('/images/mucca-mobile.png');
             background-size: 100%;
             background-position: center calc(100% - (1px - 100vw) * 0.25);
-            background-repeat: no-repeat;
-            z-index: 0;
         }
     }
-
 </style>
 
-<style define:vars={{ mobileImageUrl: hero.mobileImage.url }}>
-  @media (max-width: 992px) {
-    .navbar-hero::after {
-      background-image: url(var(--mobileImageUrl)) !important;
-    }
-  }
-  @media (max-width: 375px) {
-    .navbar-hero::after {
-      background-image: url(var(--mobileImageUrl)) !important;
-    }
-  }
+<style define:vars={{ mobileImageUrl: `url(${hero.mobileImage.url})` }}>
 </style>
 
 <div class="hero-bg-wrapper" id="hero-bg-wrapper">
   <div class="navbar-hero" id="navbar-hero">
-    
+
     <div class="hero-image">
       <img src={hero.desktopImage.url} alt={hero.desktopImage.alternativeText || hero.title} loading="eager" fetchpriority="high"/>
     </div>
@@ -433,50 +332,16 @@ const hero = await getHero();
       <h1 class="hero-title hero-title-desktop">{hero.title}</h1>
       <p class="hero-sub" id="hero-sub">{hero.subtitle}</p>
 
-      <div class="hero-btns-row" id="hero-btns">
-        {hero.ctaButtons.map((btn) => (
-          <a href={btn.url} class={btn.style === 'primary' ? 'btn-consumatori' : 'btn-produttori'}>{btn.label}</a>
-        ))}
+      <div class="whatsapp-card" id="hero-wa-card">
+        <div class="whatsapp-text" set:html={whatsappHtml} />
+        <a href={hero.whatsappLink} target="_blank" rel="noopener noreferrer" class="whatsapp-icon-btn" title="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+        <a href={hero.whatsappLink} target="_blank" rel="noopener noreferrer" class="whatsapp-full-btn">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          {hero.whatsappButtonText}
+        </a>
       </div>
-
-      <form class="hero-email-row" id="hero-email" data-formspree="https://formspree.io/f/maqlddnl">
-        <input type="email" name="email" id="hero-email-input" placeholder={hero.emailPlaceholder} required>
-        <button type="submit" id="hero-email-btn" class="btn-green-light">{hero.emailButtonText}</button>
-      </form>
-
-      <script>
-        document.getElementById('hero-email').addEventListener('submit', async function (e) {
-          e.preventDefault();
-          const form = e.target;
-          const input = document.getElementById('hero-email-input');
-          const btn = document.getElementById('hero-email-btn');
-          const data = new FormData(form);
-
-          try {
-            const url = form.getAttribute('data-formspree');
-            const res = await fetch(url, {
-              method: 'POST',
-              body: data,
-              headers: {'Accept': 'application/json'}
-            });
-
-            if (res.ok) {
-              input.value = 'Grazie, sarai aggiornato presto! 🌱';
-              input.readOnly = true;
-              input.style.background = '#e8f0e3';
-              input.style.color = '#2e3a28';
-              input.style.fontWeight = '500';
-              btn.disabled = true;
-              btn.style.opacity = '0.4';
-              btn.style.cursor = 'default';
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      </script>
-
-      <a href={hero.contactUrl} target="_blank" rel="noopener noreferrer" class="hero-contact-link" id="hero-contact">{hero.contactText}</a>
     </div>
 
     <div class="hero-arrow" id="hero-arrow">
@@ -495,10 +360,8 @@ const hero = await getHero();
   const navbarTop = document.getElementById('navbar-top');
   const title = document.getElementById('hero-title');
   const sub = document.getElementById('hero-sub');
-  const emailRow = document.getElementById('hero-email');
-  const btns = document.getElementById('hero-btns');
+  const waCard = document.getElementById('hero-wa-card');
   const arrow = document.getElementById('hero-arrow');
-  const contact = document.getElementById('hero-contact');
 
   const NAV_H = 64;
   const HERO_H = window.innerHeight;
@@ -529,14 +392,10 @@ const hero = await getHero();
     if (title) title.style.opacity = fadeO;
     if (sub) sub.style.opacity = fadeO;
     const elO = lerp(1, 0, easeInOut(Math.max(0, Math.min((raw - 0.05) / 0.45, 1))));
-    if (emailRow) emailRow.style.opacity = elO;
-    if (btns) btns.style.opacity = elO;
+    if (waCard) waCard.style.opacity = elO;
     if (arrow) arrow.style.opacity = elO;
-    if (contact) contact.style.opacity = elO;
     const pe = p > 0.8 ? 'none' : 'auto';
-    if (emailRow) emailRow.style.pointerEvents = pe;
-    if (btns) btns.style.pointerEvents = pe;
-    if (contact) contact.style.pointerEvents = pe;
+    if (waCard) waCard.style.pointerEvents = pe;
     const barP = Math.max(0, Math.min((p - 0.6) / 0.4, 1));
     if (navbarTop) {
       navbarTop.style.opacity = barP;

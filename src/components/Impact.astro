@@ -1,6 +1,8 @@
 ---
 import { getImpact } from '../lib/strapi';
+import { fetchSvgInline } from '../lib/svg';
 const impact = await getImpact();
+const metricSvgs = await Promise.all(impact.metrics.map(m => fetchSvgInline(m.icon?.url)));
 ---
 <style>
   .impact-section { background: var(--cream); padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem); }
@@ -74,7 +76,7 @@ const impact = await getImpact();
     display: flex; align-items: center; justify-content: center;
     color: white; flex-shrink: 0;
   }
-  .icard-icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  .icard-icon :global(svg) { width: 20px; height: 20px; stroke-width: 2; }
   .icard-title { font-size: 1.05rem; font-weight: 500; color: #1f2937; font-family: var(--font-body); }
 
   .icard-big-num {
@@ -132,12 +134,12 @@ const impact = await getImpact();
 
     <div class="impact-grid">
 
-      {impact.metrics.map((metric) => (
+      {impact.metrics.map((metric, i) => (
         <div class="icard fade-up" style={`--card-img: url('${metric.backgroundImage.url}');`}>
           <div class="icard-content-wrapper">
             <div class="icard-head">
               <div class="icard-icon">
-                <Fragment set:html={metric.icon} />
+                <Fragment set:html={metricSvgs[i]} />
               </div>
               <span class="icard-title">{metric.label}</span>
             </div>

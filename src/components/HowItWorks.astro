@@ -1,6 +1,8 @@
 ---
 import { getHowItWorks } from '../lib/strapi';
+import { fetchSvgInline } from '../lib/svg';
 const howItWorks = await getHowItWorks();
+const stepSvgs = await Promise.all(howItWorks.steps.map(s => fetchSvgInline(s.icon?.url)));
 ---
 <style>
   .how-section {
@@ -90,7 +92,7 @@ const howItWorks = await getHowItWorks();
     justify-content: center;
     margin-bottom: 1.5rem;
   }
-  .how-icon-box svg {
+  .how-icon-box :global(svg) {
     width: 28px;
     height: 28px;
     color: #233f2d;
@@ -205,7 +207,7 @@ const howItWorks = await getHowItWorks();
         <div class="how-card">
           <div class="how-badge">{i + 1}</div>
           <div class="how-icon-box">
-            <Fragment set:html={step.icon} />
+            <Fragment set:html={stepSvgs[i]} />
           </div>
           <h3>{step.title}</h3>
           <p>{step.description}</p>

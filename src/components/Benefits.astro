@@ -1,6 +1,8 @@
 ---
 import { getBenefits } from '../lib/strapi';
+import { fetchSvgInline } from '../lib/svg';
 const benefits = await getBenefits();
+const rowSvgs = await Promise.all(benefits.rows.map(r => fetchSvgInline(r.icon?.url)));
 ---
 <style>
   .section-title {
@@ -68,7 +70,7 @@ const benefits = await getBenefits();
     justify-content: center;
     margin-bottom: 1.5rem;
   }
-  .bcard-icon svg { width: 20px; height: 20px; stroke: #2e3a28; stroke-width: 1.5; }
+  .bcard-icon :global(svg) { width: 20px; height: 20px; stroke: #2e3a28; stroke-width: 1.5; }
 
   .bcard h3 {
     font-family: var(--font-display);
@@ -150,7 +152,7 @@ const benefits = await getBenefits();
           </div>
           <div class="bcard">
             <div class="bcard-icon">
-              <Fragment set:html={row.icon} />
+              <Fragment set:html={rowSvgs[i]} />
             </div>
             <h3>{row.title}</h3>
             <p>{row.description}</p>
