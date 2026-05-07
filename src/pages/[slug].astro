@@ -1,0 +1,491 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getQuestionnaires } from '../lib/strapi';
+import { fetchSvgInline } from '../lib/svg';
+import type { QuestionnaireData, FormField, FormSection } from '../lib/types';
+
+export async function getStaticPaths() {
+  const questionnaires = await getQuestionnaires();
+  return questionnaires.map((q) => ({
+    params: { slug: q.slug },
+    props: { questionnaire: q },
+  }));
+}
+
+const { questionnaire } = Astro.props;
+const sectionSvgs = await Promise.all(questionnaire.sections.map(s => fetchSvgInline(s.icon?.url)));
+const metaSvgs = await Promise.all(questionnaire.metaInfo.map(m => fetchSvgInline(m.icon?.url)));
+
+// Sort sections and fields by order
+questionnaire.sections.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+questionnaire.sections.forEach(s => {
+  s.fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+});
+
+const requiredFields = questionnaire.sections
+  .flatMap(s => s.fields)
+  .filter(f => f.required);
+const totalRequired = requiredFields.length;
+---
+
+<BaseLayout title={`ZenO | ${questionnaire.title}`}>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--text-dark); background: rgb(242, 239, 232); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+    /* NAVBAR */
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--navbar-bg); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+    .nav-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: #ff5e14; letter-spacing: -0.02em; text-decoration: none; }
+    .nav-back { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: var(--text-mid); text-decoration: none; transition: color .2s; }
+    .nav-back:hover { color: var(--forest); }
+
+    /* HERO */
+    .form-hero { background: var(--forest); padding: 4rem 2rem 5rem; text-align: center; }
+    .form-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(13, 204, 13, 0.36); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--white); margin-bottom: 1.5rem; }
+    .form-hero-title {  font-family: var(--font-display, inherit);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300; color: var(--white); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .form-hero-sub { font-size: 1rem; font-weight: 300; color: var(--white); opacity: 0.7; max-width: 500px; margin: 0 auto 1.5rem; line-height: 1.6; }
+    .form-hero-meta { display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .meta-pill { display: flex; align-items: center;padding: 0.6rem 1.2rem; gap: 0.4rem; font-size: 0.78rem; color: var(--white); }
+    .meta-pill :global(svg) { width: 16px; height: 16px; }
+    .section-icon :global(svg) { width: 18px; height: 18px; stroke: var(--forest); }
+    .meta-pill svg { width: 16px; height: 16px; }
+
+    /* PROGRESS */
+    .progress-wrap { background: rgb(236, 234, 225); padding: 1.2rem 2rem; position: sticky; top: 64px; z-index: 90; border-bottom: 1px solid var(--border-card); }
+    .progress-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; }
+    .progress-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    .progress-track { flex: 1; height: 5px; background: rgba(45,74,45,0.12); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--forest-btn); border-radius: 99px; transition: width .4s cubic-bezier(0.34,1.56,0.64,1); width: 0%; }
+    .progress-pct { font-size: 0.72rem; font-weight: 700; color: var(--forest); white-space: nowrap; min-width: 32px; text-align: right; }
+
+    /* FORM LAYOUT */
+    .form-body { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+    .form-section { margin-bottom: 2.5rem; }
+    .section-label { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.5rem; }
+    .section-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--sage-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .section-icon svg { width: 18px; height: 18px; stroke: var(--forest); }
+    .section-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--text-dark); }
+    .section-divider { width: 100%; height: 1px; background: var(--border-card); margin-bottom: 2rem; }
+
+    /* CARDS */
+    .q-card { background: var(--white); border: 1px solid var(--border-card); border-radius: 16px; padding: 1.6rem 1.8rem; margin-bottom: 1rem; transition: box-shadow .2s, border-color .2s; }
+    .q-card:focus-within { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(140,166,122,0.15); }
+    .q-label { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.3rem; line-height: 1.4; }
+    .q-hint { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
+
+    /* INPUTS */
+    .q-input, .q-textarea { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid rgba(45,74,45,0.15); border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem; color: var(--text-dark); background: var(--cream); outline: none; transition: border-color .2s, background .2s; resize: vertical; }
+    .q-input:focus, .q-textarea:focus { border-color: var(--sage); background: var(--white); }
+    .q-input::placeholder, .q-textarea::placeholder { color: var(--text-muted); }
+    .q-textarea { min-height: 90px; }
+
+    /* OPTIONS */
+    .options-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .options-list.inline { flex-direction: row; flex-wrap: wrap; }
+    .opt { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1rem; border: 1.5px solid rgba(45,74,45,0.12); border-radius: 10px; cursor: pointer; transition: border-color .2s, background .2s; user-select: none; }
+    .opt:hover { border-color: var(--sage); background: var(--sage-pale); }
+    .opt input[type="radio"], .opt input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; flex-shrink: 0; border: 2px solid rgba(45,74,45,0.25); border-radius: 50%; cursor: pointer; transition: border-color .2s, background .2s; position: relative; }
+    .opt input[type="checkbox"] { border-radius: 5px; }
+    .opt input[type="radio"]:checked, .opt input[type="checkbox"]:checked { background: var(--forest-btn); border-color: var(--forest-btn); }
+    .opt input[type="radio"]:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; border-radius: 50%; background: white; }
+    .opt input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(45deg); width: 5px; height: 9px; border-right: 2px solid white; border-bottom: 2px solid white; margin-top: -1px; }
+    .opt:has(input:checked) { border-color: var(--sage); background: var(--sage-pale); }
+    .opt-text { font-size: 0.875rem; color: var(--text-mid); line-height: 1.4; }
+
+    /* SUBMIT */
+    .submit-section { background: var(--white); border: 1px solid var(--border-card); border-radius: 20px; padding: 2.5rem 2rem; text-align: center; margin-top: 2rem; }
+    .submit-icon { width: 56px; height: 56px; background: var(--sage-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
+    .submit-icon svg { width: 26px; height: 26px; stroke: var(--forest); }
+    .submit-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .submit-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.8rem; line-height: 1.6; }
+    .btn-submit { padding: 1rem 3rem; background: var(--forest-btn); color: white; border: none; border-radius: 12px; font-family: var(--font-body); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 14px rgba(74,103,65,0.25); }
+    .btn-submit:hover { background: var(--forest); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(74,103,65,0.3); }
+    .btn-submit:disabled { background: var(--sage-light); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* SUCCESS */
+    .success-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(26,36,22,0.6); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 2rem; }
+    .success-overlay.show { display: flex; }
+    .success-card { background: var(--white); border-radius: 24px; padding: 3rem 2.5rem; max-width: 440px; width: 100%; text-align: center; animation: popIn .5s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.85) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .success-emoji { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
+    .success-title { font-family: var(--font-display); font-size: 1.8rem; font-weight: 900; color: var(--text-dark); margin-bottom: 0.7rem; }
+    .success-msg { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 2rem; }
+    .btn-close-success { padding: 0.85rem 2.5rem; background: var(--forest-btn); color: white; border: none; border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background .2s; }
+    .btn-close-success:hover { background: var(--forest); }
+
+    /* ERRORS */
+    .q-card.has-error { border-color: #c0392b !important; box-shadow: 0 0 0 3px rgba(192,57,43,0.1) !important; animation: shake .35s cubic-bezier(.36,.07,.19,.97); }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+    .q-error { margin-top: 0.75rem; padding: 0.5rem 0.8rem; background: rgba(192,57,43,0.07); border-radius: 8px; font-size: 0.78rem; color: #c0392b; font-weight: 500; border-left: 3px solid #c0392b; }
+
+    /* FADE */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      .form-hero { padding: 3rem 1.5rem 4rem; }
+      .form-body { padding: 2rem 1rem 5rem; }
+      .navbar { padding: 0 1.2rem; }
+      .q-card { padding: 1.3rem 1.2rem; }
+      .options-list.inline { flex-direction: column; }
+    }
+  </style>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="/" class="nav-back">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Indietro
+    </a>
+    <a href="/" class="nav-logo">ZenO</a>
+    <div style="width:70px"></div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="form-hero">
+    <div class="form-eyebrow">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/></svg>
+      {questionnaire.title}
+    </div>
+    <h1 class="form-hero-title">{questionnaire.title}</h1>
+    <p class="form-hero-sub">{questionnaire.subtitle}</p>
+    <div class="form-hero-meta">
+      {questionnaire.metaInfo.map((meta, i) => (
+        <span class="meta-pill">
+          <Fragment set:html={metaSvgs[i]} />
+          {meta.text}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-inner">
+      <span class="progress-label">Completamento</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form class="form-body" id="questionnaireForm" data-type={questionnaire.slug.includes('produttori') ? 'produttori' : 'utenti'} data-total-required={totalRequired}>
+    {questionnaire.sections.map((section, si) => (
+      <div class="form-section fade-up">
+        <div class="section-label">
+          <div class="section-icon">
+            <Fragment set:html={sectionSvgs[si]} />
+          </div>
+          <span class="section-title">{section.title}</span>
+        </div>
+        <div class="section-divider"></div>
+
+        {section.fields.map((field) => (
+          <div
+            class="q-card"
+            data-field-name={field.name}
+            data-required={field.required ? 'true' : 'false'}
+            data-conditional-on={field.conditionalOn || ''}
+            data-conditional-value={field.conditionalValue || ''}
+            style={field.conditionalOn ? 'display:none;' : ''}
+          >
+            <div class="q-label">{field.label}</div>
+
+            {field.type === 'text' && (
+              <input type="text" name={field.name} class="q-input" placeholder={field.placeholder || ''} />
+            )}
+
+            {field.type === 'number' && (
+              <input type="number" name={field.name} class="q-input"
+                min={field.minValue} max={field.maxValue}
+                placeholder={field.placeholder || ''} />
+            )}
+
+            {field.type === 'email' && (
+              <input type="email" name={field.name} class="q-input" placeholder={field.placeholder || ''} />
+            )}
+
+            {field.type === 'textarea' && (
+              <textarea name={field.name} class="q-textarea" placeholder={field.placeholder || ''}></textarea>
+            )}
+
+            {field.type === 'radio' && field.options && (
+              <div class="options-list">
+                {field.options.map((opt) => (
+                  <label class="opt">
+                    <input type="radio" name={field.name} value={opt.value} />
+                    <span class="opt-text">{opt.label}</span>
+                    {opt.hasTextInput && (
+                      <input type="text" class="q-input altro-input" name={`${field.name}_altro`}
+                        placeholder="Specifica..." style="display:none; margin-top:0.5rem; flex:1;" />
+                    )}
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {field.type === 'checkbox' && field.options && (
+              <div class="options-list" data-max-selections={field.maxSelections || 0}>
+                {field.maxSelections && (
+                  <p class="q-hint">Massimo {field.maxSelections} selezioni</p>
+                )}
+                {field.options.map((opt) => (
+                  <label class="opt">
+                    <input type="checkbox" name={field.name} value={opt.value} />
+                    <span class="opt-text">{opt.label}</span>
+                    {opt.hasTextInput && (
+                      <input type="text" class="q-input altro-input" name={`${field.name}_altro`}
+                        placeholder="Specifica..." style="display:none; margin-top:0.5rem; flex:1;" />
+                    )}
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {field.type === 'scale' && (
+              <div class="options-list inline">
+                {Array.from({ length: (field.scaleMax || 5) - (field.scaleMin || 1) + 1 }, (_, i) => (field.scaleMin || 1) + i).map((val) => (
+                  <label class="opt">
+                    <input type="radio" name={field.name} value={String(val)} />
+                    <span class="opt-text">{val}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    ))}
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <div class="submit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
+      </div>
+      <div class="submit-title">Tutto pronto?</div>
+      <div class="submit-sub">Controlla le risposte e invia il questionario.</div>
+      <button type="submit" class="btn-submit" id="submitBtn">Invia questionario</button>
+    </div>
+  </form>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <span class="success-emoji">🌿</span>
+      <div class="success-title">{questionnaire.successTitle}</div>
+      <div class="success-msg">{questionnaire.successMessage}</div>
+      <a href={questionnaire.successLinkUrl} class="btn-close-success">{questionnaire.successLinkText}</a>
+    </div>
+  </div>
+
+  <script is:inline>
+  (function() {
+    const form = document.getElementById('questionnaireForm');
+    if (!form) return;
+
+    const formType = form.getAttribute('data-type');
+    const totalRequired = parseInt(form.getAttribute('data-total-required'), 10);
+    const progressFill = document.getElementById('progressFill');
+    const progressPct = document.getElementById('progressPct');
+
+    // --- Progress tracking ---
+    function updateProgress() {
+      const cards = form.querySelectorAll('.q-card[data-required="true"]');
+      let filled = 0;
+      cards.forEach(card => {
+        if (card.style.display === 'none') { filled++; return; }
+        const name = card.getAttribute('data-field-name');
+        const input = card.querySelector('input, textarea, select');
+        if (!input) return;
+        if (input.type === 'radio') {
+          if (form.querySelector(`input[name="${name}"]:checked`)) filled++;
+        } else if (input.type === 'checkbox') {
+          if (form.querySelector(`input[name="${name}"]:checked`)) filled++;
+        } else {
+          if (input.value.trim()) filled++;
+        }
+      });
+      const pct = totalRequired > 0 ? Math.round((filled / totalRequired) * 100) : 0;
+      progressFill.style.width = pct + '%';
+      progressPct.textContent = pct + '%';
+    }
+
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+
+    // --- Conditional fields ---
+    form.addEventListener('change', function(e) {
+      const changed = e.target;
+      if (!changed.name) return;
+      const dependents = form.querySelectorAll(`[data-conditional-on="${changed.name}"]`);
+      dependents.forEach(card => {
+        const expectedValue = card.getAttribute('data-conditional-value');
+        const selected = form.querySelector(`input[name="${changed.name}"]:checked`);
+        if (selected && selected.value === expectedValue) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // --- "Altro" text inputs ---
+    form.addEventListener('change', function(e) {
+      const el = e.target;
+      if (el.type !== 'radio' && el.type !== 'checkbox') return;
+      const opt = el.closest('.opt');
+      if (!opt) return;
+      const altroInput = opt.querySelector('.altro-input');
+      if (!altroInput) return;
+      if (el.type === 'radio') {
+        const group = el.closest('.options-list');
+        group.querySelectorAll('.altro-input').forEach(a => a.style.display = 'none');
+        if (el.checked) altroInput.style.display = '';
+      } else {
+        altroInput.style.display = el.checked ? '' : 'none';
+      }
+    });
+
+    // --- Max checkbox selections ---
+    form.querySelectorAll('[data-max-selections]').forEach(list => {
+      const max = parseInt(list.getAttribute('data-max-selections'), 10);
+      if (!max) return;
+      list.addEventListener('change', () => {
+        const checked = list.querySelectorAll('input[type="checkbox"]:checked').length;
+        list.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(cb => {
+          cb.disabled = checked >= max;
+          cb.closest('.opt').style.opacity = checked >= max ? '0.5' : '1';
+        });
+      });
+    });
+
+    // --- Validation ---
+    function validate() {
+      let valid = true;
+      form.querySelectorAll('.q-card.has-error').forEach(c => c.classList.remove('has-error'));
+      form.querySelectorAll('.q-error').forEach(e => e.remove());
+
+      form.querySelectorAll('.q-card[data-required="true"]').forEach(card => {
+        if (card.style.display === 'none') return;
+        const name = card.getAttribute('data-field-name');
+        const input = card.querySelector('input, textarea');
+        if (!input) return;
+
+        let isEmpty = false;
+        if (input.type === 'radio') {
+          isEmpty = !form.querySelector(`input[name="${name}"]:checked`);
+        } else if (input.type === 'checkbox') {
+          isEmpty = !form.querySelector(`input[name="${name}"]:checked`);
+        } else {
+          isEmpty = !input.value.trim();
+        }
+
+        if (isEmpty) {
+          valid = false;
+          card.classList.add('has-error');
+          const err = document.createElement('div');
+          err.className = 'q-error';
+          err.textContent = 'Questo campo è obbligatorio';
+          card.appendChild(err);
+        }
+
+        if (input.type === 'email' && input.value.trim() && !input.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+          valid = false;
+          card.classList.add('has-error');
+          const err = document.createElement('div');
+          err.className = 'q-error';
+          err.textContent = 'Inserisci un indirizzo email valido';
+          card.appendChild(err);
+        }
+      });
+
+      if (!valid) {
+        const firstError = form.querySelector('.has-error');
+        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return valid;
+    }
+
+    // --- Submit ---
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (!validate()) return;
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Invio in corso...';
+
+      const fields = [];
+      form.querySelectorAll('.q-card').forEach(card => {
+        if (card.style.display === 'none') return;
+        const name = card.getAttribute('data-field-name');
+        const label = card.querySelector('.q-label')?.textContent || name;
+        let value = '';
+
+        const radios = card.querySelectorAll(`input[type="radio"][name="${name}"]`);
+        const checkboxes = card.querySelectorAll(`input[type="checkbox"][name="${name}"]`);
+        const textInput = card.querySelector(`input[type="text"][name="${name}"], input[type="number"][name="${name}"], input[type="email"][name="${name}"]`);
+        const textarea = card.querySelector(`textarea[name="${name}"]`);
+
+        if (radios.length) {
+          const checked = card.querySelector(`input[type="radio"][name="${name}"]:checked`);
+          if (checked) {
+            value = checked.closest('.opt')?.querySelector('.opt-text')?.textContent || checked.value;
+            const altro = checked.closest('.opt')?.querySelector('.altro-input');
+            if (altro && altro.style.display !== 'none' && altro.value.trim()) {
+              value += ': ' + altro.value.trim();
+            }
+          }
+        } else if (checkboxes.length) {
+          const checked = card.querySelectorAll(`input[type="checkbox"][name="${name}"]:checked`);
+          const values = [];
+          checked.forEach(cb => {
+            let v = cb.closest('.opt')?.querySelector('.opt-text')?.textContent || cb.value;
+            const altro = cb.closest('.opt')?.querySelector('.altro-input');
+            if (altro && altro.style.display !== 'none' && altro.value.trim()) {
+              v += ': ' + altro.value.trim();
+            }
+            values.push(v);
+          });
+          value = values.join(', ');
+        } else if (textarea) {
+          value = textarea.value.trim();
+        } else if (textInput) {
+          value = textInput.value.trim();
+        }
+
+        if (value) {
+          fields.push({ label, value });
+        }
+      });
+
+      try {
+        const res = await fetch('/api/submit-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: formType, fields })
+        });
+        if (res.ok) {
+          document.getElementById('successOverlay').classList.add('show');
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Invia questionario';
+          alert('Errore nell\'invio. Riprova.');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Invia questionario';
+        alert('Errore di rete. Riprova.');
+      }
+    });
+
+    // Fade-up observer
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    form.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  })();
+  </script>
+</BaseLayout>
