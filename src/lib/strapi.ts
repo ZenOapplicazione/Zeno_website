@@ -58,7 +58,9 @@ export async function getHowItWorks(): Promise<HowItWorksData> {
 
 export async function getGroups(): Promise<GroupsData> {
   return fetchStrapi<GroupsData>('groups-section', {
-    'populate[cards][populate]': '*',
+    'populate[cards][populate][0]': 'icon',
+    'populate[cards][populate][1]': 'howTheyUse',
+    'populate[cards][populate][2]': 'value',
   });
 }
 
@@ -70,7 +72,9 @@ export async function getImpact(): Promise<ImpactData> {
 
 export async function getBenefits(): Promise<BenefitsData> {
   return fetchStrapi<BenefitsData>('benefits', {
-    'populate[rows][populate]': '*',
+    'populate[rows][populate][0]': 'icon',
+    'populate[rows][populate][1]': 'image',
+    'populate[rows][populate][2]': 'changes',
   });
 }
 

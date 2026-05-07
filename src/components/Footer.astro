@@ -1,7 +1,9 @@
 ---
 import { getFooter } from '../lib/strapi';
 import { fetchSvgInline } from '../lib/svg';
-const footer = await getFooter();
+import type { FooterData } from '../lib/types';
+interface Props { data?: FooterData; }
+const footer = Astro.props.data ?? await getFooter();
 const currentYear = new Date().getFullYear();
 const contributeSvgs = await Promise.all(footer.contributeCards.map(c => fetchSvgInline(c.icon?.url)));
 ---

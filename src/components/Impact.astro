@@ -1,7 +1,9 @@
 ---
 import { getImpact } from '../lib/strapi';
 import { fetchSvgInline } from '../lib/svg';
-const impact = await getImpact();
+import type { ImpactData } from '../lib/types';
+interface Props { data?: ImpactData; }
+const impact = Astro.props.data ?? await getImpact();
 const metricSvgs = await Promise.all(impact.metrics.map(m => fetchSvgInline(m.icon?.url)));
 ---
 <style>
@@ -112,6 +114,60 @@ const metricSvgs = await Promise.all(impact.metrics.map(m => fetchSvgInline(m.ic
   }
   .bar-zeno-fill { height: 100%; background: #548F2E; border-radius: 99px; transition: width 1s ease; }
 
+  .impact-cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .impact-cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--forest-btn, #3e7c59);
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 99px;
+    background: rgba(62, 124, 89, 0.08);
+    border: 1px solid rgba(62, 124, 89, 0.2);
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .impact-cta-link:hover {
+    background: rgba(62, 124, 89, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .impact-cta-link svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .section-cta-wrap { text-align: center; margin-top: clamp(2rem, 4vw, 3rem); }
+  .section-cta-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--forest-btn, #3e7c59);
+    text-decoration: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 99px;
+    background: rgba(62, 124, 89, 0.08);
+    border: 1px solid rgba(62, 124, 89, 0.2);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .section-cta-text:hover { background: rgba(62, 124, 89, 0.15); transform: translateY(-1px); }
+
   @media (max-width: 992px) {
     .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
     .icard { min-height: 280px; }
@@ -149,7 +205,7 @@ const metricSvgs = await Promise.all(impact.metrics.map(m => fetchSvgInline(m.ic
                 <div class="stat-row">
                   <div class="stat-labels">
                     <span class="stat-label-title">{stat.label}</span>
-                    <span class="stat-val">{stat.value}{stat.unit}</span>
+                    <span class="stat-val">{stat.value}</span>
                   </div>
                   {i === 0 ? (
                     <div class="bar-gdo"></div>
@@ -166,5 +222,6 @@ const metricSvgs = await Promise.all(impact.metrics.map(m => fetchSvgInline(m.ic
       ))}
 
     </div>
+
   </div>
 </section>

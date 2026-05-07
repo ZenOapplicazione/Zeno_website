@@ -17,7 +17,6 @@ export interface StrapiMedia {
 // --- Shared components ---
 export interface MenuItem {
   label: string;
-  icon: StrapiMedia | null;
 }
 
 export interface Link {
@@ -43,14 +42,13 @@ export interface GroupCard {
   color: string;
   checkColor: string;
   scenario: string;
-  howTheyUse: string[];
-  value: string[];
+  howTheyUse: TextItem[];
+  value: TextItem[];
 }
 
 export interface Stat {
   label: string;
   value: string;
-  unit: string;
 }
 
 export interface MetricCard {
@@ -62,7 +60,7 @@ export interface MetricCard {
   stats: Stat[];
 }
 
-export interface Change {
+export interface TextItem {
   text: string;
 }
 
@@ -71,7 +69,7 @@ export interface BenefitRow {
   title: string;
   image: StrapiMedia;
   description: string;
-  changes: Change[];
+  changes: TextItem[];
 }
 
 export interface ContributeCard {
@@ -102,7 +100,7 @@ export interface HeroData {
   desktopImage: StrapiMedia;
   mobileImage: StrapiMedia;
   whatsappText: string;
-  whatsappLink: string;
+  whatsappNumber: string;
   whatsappButtonText: string;
 }
 

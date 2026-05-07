@@ -191,119 +191,113 @@ const navbarData = {
   formspreeUrl: 'https://formspree.io/f/maqlddnl',
 };
 
-// --- HowItWorks ---
-const howItWorksData = {
-  title: 'Organizza la tua spesa etica in 3 minuti',
-  subtitle:
-    'ZenO connette persone, produttori e punti di ritiro in un unico flusso condiviso. Gli ordini collettivi aumentano il risparmio ambientale e rendono la spesa etica più accessibile.',
-  steps: [
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
-      title: 'Unisciti o crea un gruppo',
-      description:
-        'ZenO ti permette di accedere a una rete di acquisto sostenibile. Puoi unirti a un gruppo vicino a te oppure crearne uno nuovo in pochi minuti.',
-    },
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>',
-      title: 'Scopri i produttori locali',
-      description:
-        'Ogni gruppo collabora con produttori selezionati in base a qualità, distanza e impatto ambientale.',
-    },
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.95-1.57l1.65-8.42H6"/></svg>',
-      title: 'Ordina insieme agli altri membri',
-      description:
-        "Gli ordini sono collettivi: più persone partecipano, maggiore è l'efficienza logistica e il risparmio.",
-    },
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
-      title: 'Ritira in un punto condiviso',
-      description: 'La consegna avviene in un punto di ritiro organizzato dal gruppo.',
-    },
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-      title: 'Monitora il tuo impatto',
-      description: 'Ogni acquisto genera un report chiaro sul risparmio ambientale raggiunto.',
-    },
-  ],
-};
+// --- HowItWorks (icon fields will be set to uploaded media IDs in main()) ---
+const howItWorksSteps = [
+  {
+    iconFile: 'how-step-group.svg',
+    title: 'Unisciti o crea un gruppo',
+    description:
+      'ZenO ti permette di accedere a una rete di acquisto sostenibile. Puoi unirti a un gruppo vicino a te oppure crearne uno nuovo in pochi minuti.',
+  },
+  {
+    iconFile: 'how-step-location.svg',
+    title: 'Scopri i produttori locali',
+    description:
+      'Ogni gruppo collabora con produttori selezionati in base a qualità, distanza e impatto ambientale.',
+  },
+  {
+    iconFile: 'how-step-cart.svg',
+    title: 'Ordina insieme agli altri membri',
+    description:
+      "Gli ordini sono collettivi: più persone partecipano, maggiore è l'efficienza logistica e il risparmio.",
+  },
+  {
+    iconFile: 'how-step-package.svg',
+    title: 'Ritira in un punto condiviso',
+    description: 'La consegna avviene in un punto di ritiro organizzato dal gruppo.',
+  },
+  {
+    iconFile: 'how-step-chart.svg',
+    title: 'Monitora il tuo impatto',
+    description: 'Ogni acquisto genera un report chiaro sul risparmio ambientale raggiunto.',
+  },
+];
 
-// --- GroupsSection ---
-const groupsSectionData = {
-  title: 'Come nasce un gruppo',
-  caption: 'Esempi concreti di come diversi gruppi possono utilizzare ZenO',
-  cards: [
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
-      title: 'Gruppo di genitori',
-      color: '#407D54',
-      checkColor: '#79B88D',
-      scenario:
-        "Un gruppo di genitori organizza la spesa per ridurre costi e garantire qualità ai figli.",
-      howTheyUse: [
-        'Creano un gruppo privato',
-        "Inseriscono la finestra di ritiro all'uscita di scuola",
-        'Raccolgono ordini settimanali in un unico carrello collettivo',
-      ],
-      value: [
-        'Riduzione tempo organizzativo',
-        'Spesa più sostenibile e salutare',
-        'Coordinamento semplice',
-      ],
-    },
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M4 10h16"/><path d="M8 14h.01"/><path d="M8 18h.01"/></svg>',
-      title: 'Azienda con cucina interna o spazio frigo',
-      color: '#1F5F61',
-      checkColor: '#4B9193',
-      scenario:
-        "Un'azienda con cucina o spazio refrigerato decide di fare spesa collettiva per i dipendenti.",
-      howTheyUse: [
-        "L'azienda crea un gruppo aziendale con accesso moderato",
-        'Imposta il punto di ritiro in azienda',
-        'I dipendenti ordinano individualmente',
-        'Un unico ordine aggregato viene consegnato',
-      ],
-      value: [
-        'Benefit aziendale concreto',
-        'Riduzione spostamenti individuali',
-        'Cultura aziendale orientata alla sostenibilità',
-      ],
-    },
-    {
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-      title: 'GAS già costituito',
-      color: '#1E4133',
-      checkColor: '#4E816B',
-      scenario:
-        'Un Gruppo di acquisto solidale attivo vuole digitalizzare e semplificare la gestione.',
-      howTheyUse: [
-        'Importano membri esistenti',
-        'Gestiscono cataloghi produttori',
-        'Automatizzano raccolta ordini',
-        'Monitorano impatto ambientale e sociale',
-      ],
-      value: ['Meno gestione manuale', 'Report automatici per il gruppo'],
-    },
-    {
-      icon: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 24.5V15.1667C17.5 14.8572 17.3771 14.5605 17.1583 14.3417C16.9395 14.1229 16.6428 14 16.3333 14H11.6667C11.3572 14 11.0605 14.1229 10.8417 14.3417C10.6229 14.5605 10.5 14.8572 10.5 15.1667V24.5" stroke="white" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 11.6648C3.49992 11.3253 3.57389 10.99 3.71675 10.6821C3.85962 10.3742 4.06793 10.1012 4.32717 9.88209L12.4938 2.88326C12.915 2.52732 13.4486 2.33203 14 2.33203C14.5514 2.33203 15.085 2.52732 15.5062 2.88326L23.6728 9.88209C23.9321 10.1012 24.1404 10.3742 24.2832 10.6821C24.4261 10.99 24.5001 11.3253 24.5 11.6648V22.1648C24.5 22.7836 24.2542 23.3771 23.8166 23.8147C23.379 24.2523 22.7855 24.4981 22.1667 24.4981H5.83333C5.21449 24.4981 4.621 24.2523 4.18342 23.8147C3.74583 23.3771 3.5 22.7836 3.5 22.1648V11.6648Z" stroke="white" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-      title: 'Condomini o gruppi di quartiere',
-      color: '#558B2F',
-      checkColor: '#92C66A',
-      scenario: 'Un condominio o gruppo di quartiere organizza acquisti periodici.',
-      howTheyUse: [
-        'Creano un gruppo locale',
-        'Coordinano consegna in uno spazio comune',
-        'Alternano responsabili ritiro',
-      ],
-      value: [
-        'Rafforzamento relazioni locali',
-        'Riduzione duplicazione consegne',
-        'Economie di scala',
-      ],
-    },
-  ],
-};
+// --- GroupsSection (icon fields will be set to uploaded media IDs in main()) ---
+const groupsCards = [
+  {
+    iconFile: 'group-genitori.svg',
+    title: 'Gruppo di genitori',
+    color: '#407D54',
+    checkColor: '#79B88D',
+    scenario:
+      "Un gruppo di genitori organizza la spesa per ridurre costi e garantire qualità ai figli.",
+    howTheyUse: [
+      { text: 'Creano un gruppo privato' },
+      { text: "Inseriscono la finestra di ritiro all'uscita di scuola" },
+      { text: 'Raccolgono ordini settimanali in un unico carrello collettivo' },
+    ],
+    value: [
+      { text: 'Riduzione tempo organizzativo' },
+      { text: 'Spesa più sostenibile e salutare' },
+      { text: 'Coordinamento semplice' },
+    ],
+  },
+  {
+    iconFile: 'group-azienda.svg',
+    title: 'Azienda con cucina interna o spazio frigo',
+    color: '#1F5F61',
+    checkColor: '#4B9193',
+    scenario:
+      "Un'azienda con cucina o spazio refrigerato decide di fare spesa collettiva per i dipendenti.",
+    howTheyUse: [
+      { text: "L'azienda crea un gruppo aziendale con accesso moderato" },
+      { text: 'Imposta il punto di ritiro in azienda' },
+      { text: 'I dipendenti ordinano individualmente' },
+      { text: 'Un unico ordine aggregato viene consegnato' },
+    ],
+    value: [
+      { text: 'Benefit aziendale concreto' },
+      { text: 'Riduzione spostamenti individuali' },
+      { text: 'Cultura aziendale orientata alla sostenibilità' },
+    ],
+  },
+  {
+    iconFile: 'group-gas.svg',
+    title: 'GAS già costituito',
+    color: '#1E4133',
+    checkColor: '#4E816B',
+    scenario:
+      'Un Gruppo di acquisto solidale attivo vuole digitalizzare e semplificare la gestione.',
+    howTheyUse: [
+      { text: 'Importano membri esistenti' },
+      { text: 'Gestiscono cataloghi produttori' },
+      { text: 'Automatizzano raccolta ordini' },
+      { text: 'Monitorano impatto ambientale e sociale' },
+    ],
+    value: [
+      { text: 'Meno gestione manuale' },
+      { text: 'Report automatici per il gruppo' },
+    ],
+  },
+  {
+    iconFile: 'group-condomini.svg',
+    title: 'Condomini o gruppi di quartiere',
+    color: '#558B2F',
+    checkColor: '#92C66A',
+    scenario: 'Un condominio o gruppo di quartiere organizza acquisti periodici.',
+    howTheyUse: [
+      { text: 'Creano un gruppo locale' },
+      { text: 'Coordinano consegna in uno spazio comune' },
+      { text: 'Alternano responsabili ritiro' },
+    ],
+    value: [
+      { text: 'Rafforzamento relazioni locali' },
+      { text: 'Riduzione duplicazione consegne' },
+      { text: 'Economie di scala' },
+    ],
+  },
+];
 
 // --- Footer ---
 const footerData = {
@@ -1001,10 +995,48 @@ async function main() {
   };
   await seedSingleType('hero', heroData);
 
-  // HowItWorks
+  // HowItWorks — upload step icons and build data
+  console.log('\n--- Uploading HowItWorks step icons ---');
+  const howSteps = [];
+  for (const step of howItWorksSteps) {
+    let iconId = null;
+    try {
+      iconId = await uploadImage(step.iconFile);
+    } catch (err) {
+      console.error(`Could not upload ${step.iconFile}:`, err.message);
+    }
+    howSteps.push({
+      icon: iconId,
+      title: step.title,
+      description: step.description,
+    });
+  }
+  const howItWorksData = {
+    title: 'Organizza la tua spesa etica in 3 minuti',
+    subtitle:
+      'ZenO connette persone, produttori e punti di ritiro in un unico flusso condiviso. Gli ordini collettivi aumentano il risparmio ambientale e rendono la spesa etica più accessibile.',
+    steps: howSteps,
+  };
   await seedSingleType('how-it-works', howItWorksData);
 
-  // GroupsSection
+  // GroupsSection — upload card icons and build data
+  console.log('\n--- Uploading Groups card icons ---');
+  const groupCards = [];
+  for (const card of groupsCards) {
+    let iconId = null;
+    try {
+      iconId = await uploadImage(card.iconFile);
+    } catch (err) {
+      console.error(`Could not upload ${card.iconFile}:`, err.message);
+    }
+    const { iconFile, ...rest } = card;
+    groupCards.push({ ...rest, icon: iconId });
+  }
+  const groupsSectionData = {
+    title: 'Come nasce un gruppo',
+    caption: 'Esempi concreti di come diversi gruppi possono utilizzare ZenO',
+    cards: groupCards,
+  };
   await seedSingleType('groups-section', groupsSectionData);
 
   // Impact (needs image IDs)
@@ -1019,8 +1051,8 @@ async function main() {
         label: 'Carbon Footprint',
         barPercent: 35,
         stats: [
-          { label: 'Filiera GDO', value: '100', unit: 'kg CO₂' },
-          { label: 'Filiera Zeno', value: '35', unit: 'kg CO₂' },
+          { label: 'Filiera GDO', value: '100 kg CO₂' },
+          { label: 'Filiera Zeno', value: '35 kg CO₂' },
         ],
       },
       {
@@ -1030,8 +1062,8 @@ async function main() {
         label: 'Energy Use',
         barPercent: 42,
         stats: [
-          { label: 'Filiera GDO', value: '100', unit: 'kWh' },
-          { label: 'Filiera Zeno', value: '42', unit: 'kWh' },
+          { label: 'Filiera GDO', value: '100 kWh' },
+          { label: 'Filiera Zeno', value: '42 kWh' },
         ],
       },
       {
@@ -1041,8 +1073,8 @@ async function main() {
         label: 'Food Waste',
         barPercent: 15,
         stats: [
-          { label: 'Filiera GDO', value: '100', unit: '%' },
-          { label: 'Filiera Zeno', value: '15', unit: '%' },
+          { label: 'Filiera GDO', value: '100%' },
+          { label: 'Filiera Zeno', value: '15%' },
         ],
       },
       {
@@ -1052,66 +1084,95 @@ async function main() {
         label: 'Pack Waste',
         barPercent: 25,
         stats: [
-          { label: 'Filiera GDO', value: '100', unit: 'kg' },
-          { label: 'Filiera Zeno', value: '25', unit: 'kg' },
+          { label: 'Filiera GDO', value: '100 kg' },
+          { label: 'Filiera Zeno', value: '25 kg' },
         ],
       },
     ],
   };
   await seedSingleType('impact', impactData);
 
-  // Benefits (needs image IDs)
+  // Benefits — upload icons and build data
+  console.log('\n--- Uploading Benefits icons ---');
+  const benefitIconFiles = [
+    'benefit-diversita.svg',
+    'benefit-equita.svg',
+    'benefit-benessere.svg',
+    'benefit-educazione.svg',
+    'benefit-coesione.svg',
+  ];
+  const benefitIconIds = [];
+  for (const f of benefitIconFiles) {
+    try {
+      benefitIconIds.push(await uploadImage(f));
+    } catch (err) {
+      console.error(`Could not upload ${f}:`, err.message);
+      benefitIconIds.push(null);
+    }
+  }
+
   const benefitsData = {
     title: 'Benefici condivisi',
     caption:
       'Oltre all\'impatto ambientale, creiamo <strong>valore per il territorio e la comunità</strong>',
     rows: [
       {
-        icon: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.16406 23.332H19.8307" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.6641 23.3346C18.0807 20.418 12.5974 15.868 15.1641 11.668" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.0807 10.9677C12.3641 11.901 13.1807 13.5343 13.7641 15.2843C11.4307 15.751 9.68073 15.751 8.16406 14.9343C6.76406 14.2343 5.48073 12.7177 4.66406 10.0343C7.93073 9.451 9.7974 10.0343 11.0807 10.9677Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4517 7.0013C15.5622 8.39145 15.1148 10.0185 15.1684 11.668C17.385 11.5513 19.0184 10.968 20.185 10.0346C21.3517 8.86797 22.0517 7.3513 22.1684 4.66797C19.0184 4.78464 17.5017 5.83464 16.4517 7.0013Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        icon: benefitIconIds[0],
         title: 'Diversità agricola e resilienza territoriale',
         image: diversitaId,
         description:
           'La grande distribuzione tende a standardizzare varietà e produzioni. I gruppi di acquisto favoriscono produttori che coltivano varietà locali, stagionali e meno industrializzate.',
         changes: [
-          'Più colture diversificate',
-          'Meno dipendenza da monoculture intensive',
-          'Maggiore resilienza climatica del territorio',
+          { text: 'Più colture diversificate' },
+          { text: 'Meno dipendenza da monoculture intensive' },
+          { text: 'Maggiore resilienza climatica del territorio' },
         ],
       },
       {
-        icon: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.33594 16.332C13.2019 16.332 16.3359 13.198 16.3359 9.33203C16.3359 5.46604 13.2019 2.33203 9.33594 2.33203C5.46994 2.33203 2.33594 5.46604 2.33594 9.33203C2.33594 13.198 5.46994 16.332 9.33594 16.332Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M21.1042 12.0977C22.207 12.5088 23.1884 13.1914 23.9575 14.0824C24.7267 14.9733 25.2587 16.0438 25.5045 17.1949C25.7503 18.346 25.7019 19.5404 25.3637 20.6678C25.0256 21.7952 24.4086 22.8191 23.5698 23.6449C22.7311 24.4706 21.6977 25.0716 20.5651 25.3921C19.4326 25.7126 18.2376 25.7424 17.0905 25.4787C15.9434 25.215 14.8813 24.6663 14.0025 23.8833C13.1236 23.1004 12.4564 22.1085 12.0625 20.9993" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.16406 7H9.33073V11.6667" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4968 16.1914L20.3134 17.0197L17.0234 20.3097" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        icon: benefitIconIds[1],
         title: 'Equità economica per i produttori',
         image: equitaId,
         description:
           "L'intermediazione lunga comprime i margini del produttore. L'acquisto collettivo diretto aumenta la quota di valore che resta sul territorio.",
-        changes: ['Margine più alto al produttore', 'Relazione diretta domanda-offerta'],
+        changes: [
+          { text: 'Margine più alto al produttore' },
+          { text: 'Relazione diretta domanda-offerta' },
+        ],
       },
       {
-        icon: '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.1693 16.3333C23.9076 14.63 25.6693 12.5883 25.6693 9.91667C25.6693 8.21486 24.9932 6.58276 23.7899 5.3794C22.5865 4.17604 20.9544 3.5 19.2526 3.5C17.1993 3.5 15.7526 4.08333 14.0026 5.83333C12.2526 4.08333 10.8059 3.5 8.7526 3.5C7.0508 3.5 5.41869 4.17604 4.21534 5.3794C3.01198 6.58276 2.33594 8.21486 2.33594 9.91667C2.33594 12.6 4.08594 14.6417 5.83594 16.3333L14.0026 24.5L22.1693 16.3333Z" stroke="#2E3A28" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        icon: benefitIconIds[2],
         title: 'Benessere animale e scala produttiva sostenibile',
         image: benessereId,
         description:
           'Favoriamo realtà produttive a scala più contenuta, con pratiche meno intensive che rispettano la dignità degli animali che vengono allevati.',
-        changes: ['Filiera più corta', 'Trasporto ridotto', 'Maggiore benessere animale'],
+        changes: [
+          { text: 'Filiera più corta' },
+          { text: 'Trasporto ridotto' },
+          { text: 'Maggiore benessere animale' },
+        ],
       },
       {
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+        icon: benefitIconIds[3],
         title: 'Educazione al consumo consapevole',
         image: educazioneId,
         description:
           "L'emergenza climatica e il rispetto ambientale devono modificare il nostro comportamento. Mostrare i dati sull'impatto ambientale e sociale di ciò che scegliamo aumenta la qualità delle decisioni.",
-        changes: ['Scelte informate', 'Consapevolezza dei costi reali', 'Riduzione acquisti impulsivi'],
+        changes: [
+          { text: 'Scelte informate' },
+          { text: 'Consapevolezza dei costi reali' },
+          { text: 'Riduzione acquisti impulsivi' },
+        ],
       },
       {
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        icon: benefitIconIds[4],
         title: 'Coesione sociale e comunità attiva',
         image: coesioneId,
         description:
           'Il punto di ritiro non è solo logistica: i gruppi creano reti di collaborazione tra cittadini.',
         changes: [
-          'Coordinamento locale',
-          'Responsabilità condivisa',
-          'Economia circolare di quartiere',
+          { text: 'Coordinamento locale' },
+          { text: 'Responsabilità condivisa' },
+          { text: 'Economia circolare di quartiere' },
         ],
       },
     ],

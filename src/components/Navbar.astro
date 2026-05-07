@@ -1,6 +1,8 @@
 ---
 import { getNavbar } from '../lib/strapi';
-const navbar = await getNavbar();
+import type { NavbarData } from '../lib/types';
+interface Props { data?: NavbarData; }
+const navbar = Astro.props.data ?? await getNavbar();
 ---
 <nav class="navbar-top" id="navbar-top">
 
@@ -14,7 +16,6 @@ const navbar = await getNavbar();
       <div class="dropdown-menu" id="dropdown-menu">
         {navbar.menuItems.map((item) => (
           <div class="dropdown-item">
-            {item.icon && <img src={item.icon.url} alt={item.icon.alternativeText || item.label} class="menu-item-icon" />}
             <span>{item.label}</span>
           </div>
         ))}

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getQuestionnaires, getQuestionnaireBySlug } from '../lib/strapi';
+import { getQuestionnaires } from '../lib/strapi';
 import { fetchSvgInline } from '../lib/svg';
 import type { QuestionnaireData, FormField, FormSection } from '../lib/types';
 
@@ -8,11 +8,11 @@ export async function getStaticPaths() {
   const questionnaires = await getQuestionnaires();
   return questionnaires.map((q) => ({
     params: { slug: q.slug },
+    props: { questionnaire: q },
   }));
 }
 
-const { slug } = Astro.params;
-const questionnaire = await getQuestionnaireBySlug(slug);
+const { questionnaire } = Astro.props;
 const sectionSvgs = await Promise.all(questionnaire.sections.map(s => fetchSvgInline(s.icon?.url)));
 const metaSvgs = await Promise.all(questionnaire.metaInfo.map(m => fetchSvgInline(m.icon?.url)));
 
@@ -171,7 +171,7 @@ const totalRequired = requiredFields.length;
   </div>
 
   <!-- FORM -->
-  <form class="form-body" id="questionnaireForm" data-type={slug.includes('produttori') ? 'produttori' : 'utenti'} data-total-required={totalRequired}>
+  <form class="form-body" id="questionnaireForm" data-type={questionnaire.slug.includes('produttori') ? 'produttori' : 'utenti'} data-total-required={totalRequired}>
     {questionnaire.sections.map((section, si) => (
       <div class="form-section fade-up">
         <div class="section-label">
