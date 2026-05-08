@@ -1,10 +1,8 @@
 ---
-import { getHowItWorks } from '../lib/strapi';
-import { fetchSvgInline } from '../lib/svg';
-import type { HowItWorksData } from '../lib/types';
-interface Props { data?: HowItWorksData; }
-const howItWorks = Astro.props.data ?? await getHowItWorks();
-const stepSvgs = await Promise.all(howItWorks.steps.map(s => fetchSvgInline(s.icon?.url)));
+import { howItWorksData } from '../lib/data';
+import { readLocalSvg } from '../lib/svg';
+const howItWorks = howItWorksData;
+const stepSvgs = howItWorks.steps.map(s => readLocalSvg(s.iconFile));
 ---
 <style>
   .how-section {

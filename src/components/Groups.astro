@@ -1,10 +1,8 @@
 ---
-import { getGroups } from '../lib/strapi';
-import { fetchSvgInline } from '../lib/svg';
-import type { GroupsData } from '../lib/types';
-interface Props { data?: GroupsData; }
-const groups = Astro.props.data ?? await getGroups();
-const cardSvgs = await Promise.all(groups.cards.map(c => fetchSvgInline(c.icon?.url)));
+import { groupsData } from '../lib/data';
+import { readLocalSvg } from '../lib/svg';
+const groups = groupsData;
+const cardSvgs = groups.cards.map(c => readLocalSvg(c.iconFile));
 ---
 <style>
   .groups-section {

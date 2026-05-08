@@ -1,8 +1,6 @@
 ---
-import { getNavbar } from '../lib/strapi';
-import type { NavbarData } from '../lib/types';
-interface Props { data?: NavbarData; }
-const navbar = Astro.props.data ?? await getNavbar();
+import { navbarData } from '../lib/data';
+const navbar = navbarData;
 ---
 <nav class="navbar-top" id="navbar-top">
 

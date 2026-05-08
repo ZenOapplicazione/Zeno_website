@@ -1,11 +1,10 @@
 ---
 // src/layouts/BaseLayout.astro
 import Footer from '../components/Footer.astro';
-import '../styles/global.css'; // Importa il tuo nuovo sistema di font e Tailwind 4
-import type { FooterData } from '../lib/types';
+import '../styles/global.css';
 
-interface Props { title?: string; footer?: FooterData; }
-const { title = "ZenO | La spesa consapevole, semplificata e condivisa", footer } = Astro.props;
+interface Props { title?: string; }
+const { title = "ZenO | La spesa consapevole, semplificata e condivisa" } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="it">
@@ -26,7 +25,7 @@ const { title = "ZenO | La spesa consapevole, semplificata e condivisa", footer 
     <slot />
   </main>
 
-  <Footer data={footer} />
+  <Footer />
 
   <style is:global>
     /* Reset e Variabili Colore mantenute */

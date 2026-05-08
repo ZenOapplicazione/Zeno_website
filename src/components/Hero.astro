@@ -1,11 +1,8 @@
 ---
-import { getHero } from '../lib/strapi';
-import { marked } from 'marked';
-import type { HeroData } from '../lib/types';
-interface Props { data?: HeroData; }
-const hero = Astro.props.data ?? await getHero();
-const whatsappHtml = hero.whatsappText ? marked.parse(hero.whatsappText) : '';
-const whatsappLink = hero.whatsappNumber ? `https://wa.me/${hero.whatsappNumber.replace(/\D/g, '')}` : '#';
+import { heroData } from '../lib/data';
+const hero = heroData;
+const whatsappHtml = hero.whatsappHtml;
+const whatsappLink = hero.whatsappLink;
 ---
 
 <style>
