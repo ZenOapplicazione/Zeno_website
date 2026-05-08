@@ -6,26 +6,15 @@ import HowItWorks from '../components/HowItWorks.astro';
 import Groups from '../components/Groups.astro';
 import Impact from '../components/Impact.astro';
 import Benefits from '../components/Benefits.astro';
-import { getNavbar, getHero, getHowItWorks, getGroups, getImpact, getBenefits, getFooter } from '../lib/strapi';
-
-const [navbar, hero, howItWorks, groups, impact, benefits, footer] = await Promise.all([
-  getNavbar(),
-  getHero(),
-  getHowItWorks(),
-  getGroups(),
-  getImpact(),
-  getBenefits(),
-  getFooter(),
-]);
 ---
 
-<BaseLayout title="ZenO | La spesa consapevole, semplificata e condivisa" footer={footer}>
+<BaseLayout title="ZenO | La spesa consapevole, semplificata e condivisa">
 
-  <Navbar data={navbar} />
-  <Hero data={hero} />
-  <HowItWorks data={howItWorks} />
-  <Groups data={groups} />
-  <Impact data={impact} />
-  <Benefits data={benefits} />
+  <Navbar />
+  <Hero />
+  <HowItWorks />
+  <Groups />
+  <Impact />
+  <Benefits />
 
 </BaseLayout>

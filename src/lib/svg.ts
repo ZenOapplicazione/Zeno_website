@@ -1,16 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 /**
- * Fetches an SVG from a URL and returns its content as an inline string.
- * This allows CSS to style the SVG (stroke, fill, etc).
+ * Reads a local SVG file from public/images/ and returns its content as an inline string.
  */
-export async function fetchSvgInline(url: string | undefined | null): Promise<string> {
-  if (!url) return '';
+export function readLocalSvg(filename: string | null | undefined): string {
+  if (!filename) return '';
   try {
-    const res = await fetch(url);
-    if (!res.ok) return '';
-    const text = await res.text();
-    // Only return if it's actually SVG content
-    if (text.includes('<svg')) return text;
-    return '';
+    const filePath = path.join(process.cwd(), 'public', 'images', filename);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    return content.includes('<svg') ? content : '';
   } catch {
     return '';
   }

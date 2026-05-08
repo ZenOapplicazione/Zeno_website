@@ -1,10 +1,8 @@
 ---
-import { getBenefits } from '../lib/strapi';
-import { fetchSvgInline } from '../lib/svg';
-import type { BenefitsData } from '../lib/types';
-interface Props { data?: BenefitsData; }
-const benefits = Astro.props.data ?? await getBenefits();
-const rowSvgs = await Promise.all(benefits.rows.map(r => fetchSvgInline(r.icon?.url)));
+import { benefitsData } from '../lib/data';
+import { readLocalSvg } from '../lib/svg';
+const benefits = benefitsData;
+const rowSvgs = benefits.rows.map(r => readLocalSvg(r.iconFile));
 ---
 <style>
   .section-title {
@@ -214,7 +212,7 @@ const rowSvgs = await Promise.all(benefits.rows.map(r => fetchSvgInline(r.icon?.
       {benefits.rows.map((row, i) => (
         <div class={`brow fade-up ${i % 2 !== 0 ? 'img-right' : ''}`}>
           <div class="bcard-image">
-            <img src={row.image.url} alt={row.image.alternativeText || row.title} />
+            <img src={row.image.url} alt={row.image.alternativeText || row.title} loading="lazy" />
           </div>
           <div class="bcard">
             <div class="bcard-icon">
