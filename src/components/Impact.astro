@@ -4,7 +4,7 @@ const impact = impactData;
 const metricSvgs = impact.metrics.map(m => m.iconSvg);
 ---
 <style>
-  .impact-section { background: var(--cream); padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem); }
+  .impact-section { background: #EDE9DE; padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem); }
   .impact-inner { max-width: 80rem; margin: 0 auto; text-align: center; }
   .impact-header { margin-bottom: clamp(2rem, 4vw, 4rem); }
   .impact-header .section-title {
@@ -178,7 +178,7 @@ const metricSvgs = impact.metrics.map(m => m.iconSvg);
   }
 </style>
 
-<section class="impact-section">
+<section class="impact-section" id="impactSection">
   <div class="impact-inner">
     <div class="impact-header fade-up">
       <h2 class="section-title">{impact.title}</h2>

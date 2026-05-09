@@ -4,11 +4,11 @@
 export const navbarData = {
   logo: 'ZenO',
   menuItems: [
-    { label: 'Home' },
-    { label: 'Come funziona' },
-    { label: 'A chi si rivolge' },
-    { label: 'Risparmio ambientale' },
-    { label: 'Valore sociale' },
+    { label: 'Home', target: 'top' },
+    { label: 'Come funziona', target: 'howSection' },
+    { label: 'A chi si rivolge', target: 'groupsSection' },
+    { label: 'Risparmio ambientale', target: 'impactSection' },
+    { label: 'Valore sociale', target: 'benefitsSection' },
   ],
   questionnairePopupTitle: 'Questionari',
   questionnaires: [
@@ -25,7 +25,7 @@ export const heroData = {
   subtitle: 'La spesa consapevole, semplificata e condivisa.',
   desktopImage: { url: '/images/mucca.png', alternativeText: 'Mucca ZenO' },
   mobileImage: { url: '/images/mucca-mobile.png', alternativeText: 'Mucca ZenO mobile' },
-  whatsappHtml: '<p>Vuoi comprare alimenti più buoni e più etici dai produttori che vuoi sostenere? Con ZenO puoi <strong>creare o unirti ad un gruppo di acquisto</strong> nella tua zona. Scrivici su WhatsApp per partecipare o saperne di più.</p>',
+  whatsappHtml: '<p>Vuoi comprare alimenti più buoni e più etici dai produttori che vuoi sostenere?</p> <p><strong>Scrivici su WhatsApp</strong>.</p>',
   whatsappLink: 'https://wa.me/393388833566?text=Ho%20domande%20su%20Zeno',
   whatsappButtonText: 'Inizia su WhatsApp',
 };

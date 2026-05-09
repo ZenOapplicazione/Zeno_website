@@ -14,7 +14,7 @@ const rowSvgs = benefits.rows.map(r => readLocalSvg(r.iconFile));
     color: var(--text-dark);
     margin-bottom: 1rem;
   }
-  .benefits-section { background: rgb(237, 233, 222); padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem) clamp(3rem, 5vw, 6rem); }
+  .benefits-section { background: #EAE1C9; padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem) clamp(3rem, 5vw, 6rem); }
   .benefits-inner { max-width: 100rem; margin: 0 auto; }
   .benefits-header { text-align: center; margin-bottom: clamp(2rem, 4vw, 4rem); }
 
@@ -162,7 +162,8 @@ const rowSvgs = benefits.rows.map(r => readLocalSvg(r.iconFile));
     flex-shrink: 0;
   }
 
-  .section-cta-wrap { text-align: center; margin-top: clamp(2rem, 4vw, 3rem); }
+  .section-cta-wrap { text-align: center; margin-top: clamp(2rem, 4vw, 3rem); display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+  .section-cta-wrap .section-cta-text { width: 280px; white-space: nowrap; }
   .section-cta-text {
     display: inline-flex;
     align-items: center;
@@ -174,11 +175,28 @@ const rowSvgs = benefits.rows.map(r => readLocalSvg(r.iconFile));
     text-decoration: none;
     padding: 0.65rem 1.4rem;
     border-radius: 99px;
+    min-width: 220px;
+    justify-content: center;
     background: rgba(62, 124, 89, 0.08);
     border: 1px solid rgba(62, 124, 89, 0.2);
     transition: background 0.2s, transform 0.15s;
   }
   .section-cta-text:hover { background: rgba(62, 124, 89, 0.15); transform: translateY(-1px); }
+  .section-cta-text svg {
+    width: 18px;
+    height: 18px;
+  }
+  .section-cta-text svg:last-child {
+    animation: nudge-arrow 2s ease-in-out infinite;
+  }
+  .section-cta-text:hover svg:last-child {
+    animation: none;
+    transform: translateX(4px);
+  }
+  @keyframes nudge-arrow {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+  }
 
   @media (max-width: 768px) {
     .brow,
@@ -190,20 +208,14 @@ const rowSvgs = benefits.rows.map(r => readLocalSvg(r.iconFile));
   }
 </style>
 
-<section class="benefits-section">
+<section class="benefits-section" id="benefitsSection">
   <div class="benefits-inner">
     <div class="benefits-header fade-up">
       <h2 class="section-title">{benefits.title}</h2>
       <p class="impact-caption" set:html={benefits.caption} />
-      <div class="benefits-cta-row">
-        <a href="/questionario-utenti" class="benefits-cta-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          Questionario consumatori
-        </a>
-        <a href="/questionario-produttori" class="benefits-cta-link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Questionario produttori
-        </a>
+      <div class="section-cta-wrap">
+        <a href="/questionario-utenti" class="section-cta-text fade-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Sei un consumatore? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></a>
+        <a href="/questionario-produttori" class="section-cta-text fade-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Sei un produttore? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></a>
       </div>
     </div>
 

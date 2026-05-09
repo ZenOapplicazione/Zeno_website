@@ -187,10 +187,13 @@ const stepSvgs = howItWorks.steps.map(s => readLocalSvg(s.iconFile));
     text-decoration: none;
     padding: 0.65rem 1.4rem;
     border-radius: 99px;
-    margin: 1.5rem auto 0;
+    margin: 0;
+    min-width: 220px;
+    justify-content: center;
     transition: background 0.2s, transform 0.15s;
   }
-  .section-cta-wrap { text-align: center; }
+  .section-cta-wrap { text-align: center; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+  .section-cta-wrap .section-cta-text { width: 280px; white-space: nowrap; }
   .section-cta-text.light {
     color: #fff;
     background: rgba(255, 255, 255, 0.12);
@@ -203,9 +206,11 @@ const stepSvgs = howItWorks.steps.map(s => readLocalSvg(s.iconFile));
   .section-cta-text svg {
     width: 18px;
     height: 18px;
+  }
+  .section-cta-text svg:last-child {
     animation: nudge-arrow 2s ease-in-out infinite;
   }
-  .section-cta-text:hover svg {
+  .section-cta-text:hover svg:last-child {
     animation: none;
     transform: translateX(4px);
   }
@@ -265,7 +270,8 @@ const stepSvgs = howItWorks.steps.map(s => readLocalSvg(s.iconFile));
   </div>
 
   <div class="section-cta-wrap">
-    <a href="/questionario-utenti" class="section-cta-text light fade-up">Sei un consumatore? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></a>
+    <a href="/questionario-utenti" class="section-cta-text light fade-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Sei un consumatore? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></a>
+    <a href="/questionario-produttori" class="section-cta-text light fade-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Sei un produttore? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></a>
   </div>
 </section>
 
