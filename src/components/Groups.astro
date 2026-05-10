@@ -1,6 +1,7 @@
 ---
 import { groupsData } from '../lib/data';
 import { readLocalSvg } from '../lib/svg';
+import QuestionariCTA from './QuestionariCTA.astro';
 const groups = groupsData;
 const cardSvgs = groups.cards.map(c => readLocalSvg(c.iconFile));
 ---
@@ -234,5 +235,7 @@ const cardSvgs = groups.cards.map(c => readLocalSvg(c.iconFile));
         </div>
       ))}
     </div>
+
+    <QuestionariCTA variant="ghost" />
   </div>
 </section>

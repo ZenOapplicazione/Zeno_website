@@ -1,6 +1,7 @@
 ---
 import { howItWorksData } from '../lib/data';
 import { readLocalSvg } from '../lib/svg';
+import QuestionariCTA from './QuestionariCTA.astro';
 const howItWorks = howItWorksData;
 const stepSvgs = howItWorks.steps.map(s => readLocalSvg(s.iconFile));
 ---
@@ -227,6 +228,8 @@ const stepSvgs = howItWorks.steps.map(s => readLocalSvg(s.iconFile));
       <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
     </button>
   </div>
+
+  <QuestionariCTA variant="light" />
 </section>
 
 <script>

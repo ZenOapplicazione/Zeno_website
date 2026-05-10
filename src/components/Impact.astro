@@ -1,5 +1,6 @@
 ---
 import { impactData } from '../lib/data';
+import QuestionariCTA from './QuestionariCTA.astro';
 const impact = impactData;
 const metricSvgs = impact.metrics.map(m => m.iconSvg);
 ---
@@ -203,5 +204,6 @@ const metricSvgs = impact.metrics.map(m => m.iconSvg);
 
     </div>
 
+    <QuestionariCTA variant="ghost" />
   </div>
 </section>

@@ -1,0 +1,106 @@
+---
+interface Props {
+  variant?: 'ghost' | 'light';
+}
+const { variant = 'ghost' } = Astro.props;
+
+const items = [
+  {
+    href: '/questionario-utenti',
+    label: 'Sei un consumatore?',
+    icon: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    shade: 'light',
+  },
+  {
+    href: '/questionario-produttori',
+    label: 'Sei un produttore?',
+    icon: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+    shade: 'dark',
+  },
+];
+---
+
+<div class="q-cta-wrap">
+  {items.map(({ href, label, icon, shade }) => (
+    <a href={href} class:list={['q-cta', `q-v-${variant}`, `q-s-${shade}`, 'fade-up']}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icon} />
+      <span>{label}</span>
+      <svg class="q-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    </a>
+  ))}
+</div>
+
+<style>
+  .q-cta-wrap {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  .q-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 280px;
+    min-width: 220px;
+    padding: 0.7rem 1.4rem;
+    border-radius: 99px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .q-cta svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .q-cta:hover { transform: translateY(-1px); }
+  .q-cta:hover .q-arrow { animation: none; transform: translateX(4px); }
+  .q-arrow { animation: q-nudge 2s ease-in-out infinite; }
+
+  /* ─── Ghost variant — cream sections (navbar greens, solid) ─── */
+  .q-v-ghost.q-s-light {
+    color: #ffffff;
+    background: #407d54;
+    border: 1px solid #407d54;
+  }
+  .q-v-ghost.q-s-light:hover {
+    background: #2d5d3d;
+    border-color: #2d5d3d;
+  }
+  .q-v-ghost.q-s-dark {
+    color: #ffffff;
+    background: #1c4233;
+    border: 1px solid #1c4233;
+  }
+  .q-v-ghost.q-s-dark:hover {
+    background: #132f24;
+    border-color: #132f24;
+  }
+
+  /* ─── Light variant — first section (dark forest background) ─── */
+  .q-v-light.q-s-light {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .q-v-light.q-s-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .q-v-light.q-s-dark {
+    color: #1c4233;
+    background: #ffffff;
+    border: 1px solid #ffffff;
+  }
+  .q-v-light.q-s-dark:hover {
+    background: #f4faf1;
+    border-color: #f4faf1;
+  }
+
+  @keyframes q-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+  }
+</style>
