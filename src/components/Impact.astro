@@ -147,23 +147,6 @@ const metricSvgs = impact.metrics.map(m => m.iconSvg);
     flex-shrink: 0;
   }
 
-  .section-cta-wrap { text-align: center; margin-top: clamp(2rem, 4vw, 3rem); }
-  .section-cta-text {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--forest-btn, #3e7c59);
-    text-decoration: none;
-    padding: 0.65rem 1.4rem;
-    border-radius: 99px;
-    background: rgba(62, 124, 89, 0.08);
-    border: 1px solid rgba(62, 124, 89, 0.2);
-    transition: background 0.2s, transform 0.15s;
-  }
-  .section-cta-text:hover { background: rgba(62, 124, 89, 0.15); transform: translateY(-1px); }
 
   @media (max-width: 992px) {
     .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
