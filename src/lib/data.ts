@@ -156,48 +156,48 @@ export const impactData = {
       iconSvg:
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><line x1="2" y1="22" x2="11" y2="20"></line></svg>',
       backgroundImage: '/images/carbon_footprint.jpg',
-      bigNumber: '-65%',
+      bigNumber: '-60%',
       label: 'Carbon Footprint',
-      barPercent: 35,
+      barPercent: 40,
       stats: [
         { label: 'Filiera GDO', value: '100 kg CO₂' },
-        { label: 'Filiera Zeno', value: '35 kg CO₂' },
+        { label: 'Filiera Zeno', value: '40 kg CO₂' },
       ],
     },
     {
       iconSvg:
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
       backgroundImage: '/images/energy_use.png',
-      bigNumber: '-58%',
+      bigNumber: '-50%',
       label: 'Energy Use',
-      barPercent: 42,
+      barPercent: 50,
       stats: [
         { label: 'Filiera GDO', value: '100 kWh' },
-        { label: 'Filiera Zeno', value: '42 kWh' },
+        { label: 'Filiera Zeno', value: '50 kWh' },
       ],
     },
     {
       iconSvg:
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"></path><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"></path></svg>',
       backgroundImage: '/images/food_waste.png',
-      bigNumber: '-85%',
+      bigNumber: '-75%',
       label: 'Food Waste',
-      barPercent: 15,
+      barPercent: 25,
       stats: [
         { label: 'Filiera GDO', value: '100%' },
-        { label: 'Filiera Zeno', value: '15%' },
+        { label: 'Filiera Zeno', value: '25%' },
       ],
     },
     {
       iconSvg:
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
       backgroundImage: '/images/package_waste.png',
-      bigNumber: '-75%',
+      bigNumber: '-80%',
       label: 'Pack Waste',
-      barPercent: 25,
+      barPercent: 20,
       stats: [
         { label: 'Filiera GDO', value: '100 kg' },
-        { label: 'Filiera Zeno', value: '25 kg' },
+        { label: 'Filiera Zeno', value: '20 kg' },
       ],
     },
   ],
@@ -235,7 +235,7 @@ export const benefitsData = {
     {
       iconFile: 'benefit-benessere.svg',
       title: 'Benessere animale e scala produttiva sostenibile',
-      image: { url: '/images/benessere_animale.jpeg', alternativeText: 'Benessere animale' },
+      image: { url: '/images/benessere_animale.png', alternativeText: 'Benessere animale' },
       description:
         'Favoriamo realtà produttive a scala più contenuta, con pratiche meno intensive che rispettano la dignità degli animali che vengono allevati.',
       changes: [
@@ -247,7 +247,7 @@ export const benefitsData = {
     {
       iconFile: 'benefit-educazione.svg',
       title: 'Educazione al consumo consapevole',
-      image: { url: '/images/educazione.jpeg', alternativeText: 'Educazione al consumo' },
+      image: { url: '/images/educazione.png', alternativeText: 'Educazione al consumo' },
       description:
         "L'emergenza climatica e il rispetto ambientale devono modificare il nostro comportamento. Mostrare i dati sull'impatto ambientale e sociale di ciò che scegliamo aumenta la qualità delle decisioni.",
       changes: [
