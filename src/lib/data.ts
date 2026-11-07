@@ -25,7 +25,7 @@ export const heroData = {
   subtitle: 'La spesa consapevole, semplificata e condivisa.',
   desktopImage: { url: '/images/mucca.png', alternativeText: 'Mucca ZenO' },
   mobileImage: { url: '/images/mucca-mobile.png', alternativeText: 'Mucca ZenO mobile' },
-  whatsappHtml: '<p>Vuoi comprare alimenti più buoni e più etici dai produttori che vuoi sostenere?</p> <p><strong>Scrivici su WhatsApp</strong>.</p>',
+  whatsappHtml: '<p>Vuoi comprare alimenti dai produttori che vuoi sostenere?</p> <p><strong>Scrivici su WhatsApp</strong>.</p>',
   whatsappLink: 'https://wa.me/393388833566?text=Ho%20domande%20su%20Zeno',
   whatsappButtonText: 'Inizia su WhatsApp',
 };
