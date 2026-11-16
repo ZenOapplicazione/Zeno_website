@@ -1,6 +1,7 @@
 ---
 // questionario-utenti.astro – ZenO User Questionnaire
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AntiSpam from '../components/AntiSpam.astro';
 ---
 
 <BaseLayout title="ZenO | Questionario Utenti">
@@ -406,6 +407,7 @@ Dati anonimi
         </div>
         <div class="submit-title">Quasi fatto!</div>
         <p class="submit-sub">Le tue risposte ci aiutano a costruire qualcosa di davvero utile. Grazie per il tuo tempo.</p>
+        <AntiSpam />
         <button type="submit" class="btn-submit" id="submitBtn">Invia il questionario</button>
       </div>
 
@@ -422,6 +424,8 @@ Dati anonimi
   </div>
 
   <script>
+    import { postForm, ANTISPAM_FIELDS } from '../lib/antispam';
+
     const form = document.getElementById('zenoForm');
 
     // ── FIELD NAMES for progress tracking ──
@@ -561,7 +565,7 @@ Dati anonimi
       const fields = [];
       const seen = new Set();
       for (const [key] of rawData.entries()) {
-        if (seen.has(key)) continue;
+        if (seen.has(key) || ANTISPAM_FIELDS.has(key)) continue;
         seen.add(key);
         const values = rawData.getAll(key).filter(v => v.trim());
         if (values.length === 0) continue;
@@ -570,27 +574,14 @@ Dati anonimi
       }
 
       try {
-        const res = await fetch('/api/submit-form', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'utenti', fields }),
-        });
+        // Invio tramite API protetta (anti-spam + Resend; l'eventuale email
+        // viene iscritta agli aggiornamenti direttamente dal server)
+        const { ok, error } = await postForm(form, { type: 'utenti', fields });
 
-        const emailVal = form.querySelector('[name="entry.EMAIL"]')?.value?.trim();
-        if (emailVal) {
-          const emailData = new FormData();
-          emailData.append('email', emailVal);
-          fetch('https://formspree.io/f/maqlddnl', {
-            method: 'POST',
-            body: emailData,
-            headers: { 'Accept': 'application/json' },
-          }).catch(() => {});
-        }
-
-        if (res.ok) {
+        if (ok) {
           document.getElementById('successOverlay').classList.add('show');
         } else {
-          alert('Errore nell\'invio. Riprova tra qualche istante.');
+          alert(error || 'Errore nell\'invio. Riprova tra qualche istante.');
         }
       } catch (err) {
         console.error('Errore di invio:', err);
