@@ -206,7 +206,7 @@ const whatsappLink = hero.whatsappLink;
             min-height: 16dvh;
             position: relative;
             z-index: 3;
-            padding: 1rem 2rem 0;
+            padding: 60px 2rem 0;
             margin-bottom: -1px;
         }
 
@@ -373,12 +373,13 @@ const whatsappLink = hero.whatsappLink;
   const heroWrapper = document.getElementById('hero-bg-wrapper');
   const hero = document.getElementById('navbar-hero');
   const navbarTop = document.getElementById('navbar-top');
+  const navbarLogo = document.getElementById('navbar-logo');
   const title = document.getElementById('hero-title');
   const sub = document.getElementById('hero-sub');
   const waCard = document.getElementById('hero-wa-card');
   const arrow = document.getElementById('hero-arrow');
 
-  const NAV_H = 64;
+  const NAV_H = navbarTop ? navbarTop.offsetHeight : 64;
   const HERO_H = window.innerHeight;
 
   function easeInOut(t) {
@@ -412,10 +413,8 @@ const whatsappLink = hero.whatsappLink;
     const pe = p > 0.8 ? 'none' : 'auto';
     if (waCard) waCard.style.pointerEvents = pe;
     const barP = Math.max(0, Math.min((p - 0.6) / 0.4, 1));
-    if (navbarTop) {
-      navbarTop.style.opacity = barP;
-      navbarTop.style.pointerEvents = barP > 0.1 ? 'auto' : 'none';
-    }
+    // Pulsanti e tendina sempre visibili; il logo compare solo quando l'hero si chiude
+    if (navbarLogo) navbarLogo.style.opacity = barP;
     ticking = false;
   }
 

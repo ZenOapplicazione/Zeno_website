@@ -22,7 +22,7 @@ const navbar = navbarData;
   </div>
 
   <div class="nav-center">
-    <span class="navbar-logo">{navbar.logo}</span>
+    <span class="navbar-logo" id="navbar-logo">{navbar.logo}</span>
   </div>
 
   <div class="nav-right">
@@ -103,10 +103,9 @@ const navbar = navbarData;
     z-index: 1000;
   }
 
+  /* Nessuna striscia: lo sfondo è quello dell'hero che si restringe sotto la navbar */
   .navbar-top.scrolled {
-    background: rgba(246, 244, 239, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: transparent;
   }
 
   .nav-center {
@@ -120,6 +119,7 @@ const navbar = navbarData;
     font-weight: 800; 
     color: #ff5e14; 
     letter-spacing: -0.02em;
+    transition: opacity 0.2s ease;
   }
 
   .nav-left {
