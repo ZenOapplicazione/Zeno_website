@@ -103,9 +103,11 @@ const navbar = navbarData;
     z-index: 1000;
   }
 
-  /* Nessuna striscia: lo sfondo è quello dell'hero che si restringe sotto la navbar */
+  /* In cima all'hero la navbar è trasparente; scorrendo diventa chiara */
   .navbar-top.scrolled {
-    background: var(--bg-light, #EDE9DE);
+    background: rgba(246, 244, 239, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   }
 
   .nav-center {
