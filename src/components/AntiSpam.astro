@@ -1,0 +1,24 @@
+---
+// Campi anti-spam da inserire dentro ogni <form>:
+// - honeypot "website": invisibile alle persone, i bot lo compilano
+// - widget Cloudflare Turnstile (invisibile se non serve una verifica)
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+<div class="hp-field" aria-hidden="true">
+  <label>Non compilare questo campo
+    <input type="text" name="website" tabindex="-1" autocomplete="off" />
+  </label>
+</div>
+{siteKey && (
+  <div class="cf-turnstile" data-sitekey={siteKey} data-appearance="interaction-only" data-size="flexible" data-language="it"></div>
+)}
+
+<style is:global>
+  .hp-field {
+    position: absolute !important;
+    left: -10000px !important;
+    width: 1px; height: 1px;
+    overflow: hidden;
+  }
+  .cf-turnstile:empty { display: none; }
+</style>

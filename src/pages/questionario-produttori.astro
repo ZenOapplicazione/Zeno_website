@@ -1,6 +1,7 @@
 ---
 // questionario-produttori.astro – ZenO Producer Questionnaire
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AntiSpam from '../components/AntiSpam.astro';
 ---
 
 <BaseLayout title="ZenO | Questionario Produttori">
@@ -491,6 +492,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
         <div class="submit-title">Quasi fatto!</div>
         <p class="submit-sub">Le vostre risposte ci aiutano a costruire qualcosa di davvero utile per i produttori. Grazie per il vostro tempo.</p>
+        <AntiSpam />
         <button type="submit" class="btn-submit" id="submitBtn">Invia il questionario</button>
       </div>
 
@@ -507,6 +509,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <script>
+    import { postForm, ANTISPAM_FIELDS } from '../lib/antispam';
+
     const form = document.getElementById('zenoForm');
 
     // ── ALTRO: mostra/nascondi campo testo ──
@@ -659,7 +663,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       const fields = [];
       const seen = new Set();
       for (const [key] of rawData.entries()) {
-        if (seen.has(key)) continue;
+        if (seen.has(key) || ANTISPAM_FIELDS.has(key)) continue;
         seen.add(key);
         const values = rawData.getAll(key).filter(v => v.trim());
         if (values.length === 0) continue;
@@ -668,29 +672,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
 
       try {
-        // Send questionnaire via Resend
-        const res = await fetch('/api/submit-form', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'produttori', fields }),
-        });
+        // Invio tramite API protetta (anti-spam + Resend; l'eventuale email
+        // viene iscritta agli aggiornamenti direttamente dal server)
+        const { ok, error } = await postForm(form, { type: 'produttori', fields });
 
-        // Also subscribe email to Formspree newsletter if provided
-        const emailVal = form.querySelector('[name="entry.EMAIL"]')?.value?.trim();
-        if (emailVal) {
-          const emailData = new FormData();
-          emailData.append('email', emailVal);
-          fetch('https://formspree.io/f/maqlddnl', {
-            method: 'POST',
-            body: emailData,
-            headers: { 'Accept': 'application/json' },
-          }).catch(() => {});
-        }
-
-        if (res.ok) {
+        if (ok) {
           document.getElementById('successOverlay').classList.add('show');
         } else {
-          alert('Errore nell\'invio. Riprova tra qualche istante.');
+          alert(error || 'Errore nell\'invio. Riprova tra qualche istante.');
         }
       } catch (err) {
         console.error(err);

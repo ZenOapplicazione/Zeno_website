@@ -16,7 +16,6 @@ export const navbarData = {
     { slug: 'questionario-produttori', title: 'Questionario produttori' },
   ],
   emailPlaceholder: 'La tua email',
-  formspreeUrl: 'https://formspree.io/f/maqlddnl',
 };
 
 // ─── Hero ───
@@ -278,7 +277,6 @@ export const footerData = {
   emailLabel: 'Resta aggiornato',
   emailPlaceholder: 'Inserisci la tua email per restare aggiornato',
   emailButtonText: 'Iscriviti',
-  formspreeUrl: 'https://formspree.io/f/maqlddnl',
   contributeTitle: 'Dai il tuo contributo',
   contributeCards: [
     {

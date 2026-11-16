@@ -1,5 +1,6 @@
 ---
 import { footerData } from '../lib/data';
+import AntiSpam from './AntiSpam.astro';
 const footer = footerData;
 const currentYear = new Date().getFullYear();
 const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
@@ -20,39 +21,40 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
           </svg>
           {footer.emailLabel}
         </div>
-        <form class="footer-email-row" id="hero-email-footer" data-formspree={footer.formspreeUrl}>
+        <form class="footer-email-row" id="hero-email-footer">
           <input type="email" name="email" id="hero-email-input-footer" placeholder={footer.emailPlaceholder} required>
           <button type="submit" id="hero-email-btn-footer">{footer.emailButtonText}</button>
+        <AntiSpam />
         </form>
         <script>
-      document.getElementById('hero-email-footer').addEventListener('submit', async function(e) {
+      import { postForm } from '../lib/antispam';
+
+      const subscribeForm = document.getElementById('hero-email-footer') as HTMLFormElement;
+      subscribeForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const form = e.target;
-        const input = document.getElementById('hero-email-input-footer');
-        const btn = document.getElementById('hero-email-btn-footer');
-        const data = new FormData(form);
-        const formspreeUrl = form.getAttribute('data-formspree');
+        const input = document.getElementById('hero-email-input-footer') as HTMLInputElement;
+        const btn = document.getElementById('hero-email-btn-footer') as HTMLButtonElement;
+        if (input.readOnly) return;
+        btn.disabled = true;
 
         try {
-          const res = await fetch(formspreeUrl, {
-            method: 'POST',
-            body: data,
-            headers: { 'Accept': 'application/json' }
-          });
-          console.log(res)
-          if (res.ok) {
+          const { ok, error } = await postForm(subscribeForm, { type: 'newsletter', email: input.value.trim() });
+          if (ok) {
             input.value = 'Grazie, sarai aggiornato presto! 🌱';
             input.readOnly = true;
             input.style.background = '#e8f0e3';
             input.style.color = '#2e3a28';
             input.style.fontWeight = '500';
-            btn.disabled = true;
             btn.style.opacity = '0.4';
             btn.style.cursor = 'default';
+            return;
           }
-        } catch(err) {
+          alert(error || 'Iscrizione non riuscita. Riprova tra qualche istante.');
+        } catch (err) {
           console.error(err);
+          alert('Errore di rete. Controlla la connessione e riprova.');
         }
+        btn.disabled = false;
       });
     </script>
       </div>
@@ -105,7 +107,8 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
 
   .footer-email-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600; color: rgb(255,255,255); margin-bottom: 0.7rem; }
   .footer-email-label svg { width: 16px; height: 16px; stroke: currentColor; }
-  .footer-email-row { display: flex; gap: 0.5rem; }
+  .footer-email-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .footer-email-row .cf-turnstile { flex-basis: 100%; }
   .footer-email-row input { flex: 1; padding: 0.8rem 1rem; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 8px; color: var(--white); font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color .2s; }
   .footer-email-row input::placeholder { color: rgba(255,255,255,0.4); }
   .footer-email-row input:focus { border-color: rgba(255,255,255,0.5); }
