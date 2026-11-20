@@ -29,6 +29,10 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
       import { getTurnstileToken, preloadTurnstile, TURNSTILE_FIELD } from '../lib/turnstile';
       preloadTurnstile();
 
+      document.getElementById('footer-back-top').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
       document.getElementById('hero-email-footer').addEventListener('submit', async function(e) {
         e.preventDefault();
         const form = e.target;
@@ -85,7 +89,7 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
     <div class="footer-bottom">
       <span class="footer-copy">&copy; {footer.copyright.replace('{year}', String(currentYear))}</span>
 
-      <button class="footer-back-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+      <button class="footer-back-top" id="footer-back-top">
         Torna su
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="18 15 12 9 6 15"/>

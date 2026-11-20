@@ -14,7 +14,10 @@ export default defineConfig({
 
   vite: {
     // I plugin puri di Vite vanno qui
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    // Nessuno script inline nell'HTML: tutti diventano file in /_astro/.
+    // Serve alla Content-Security-Policy (vercel.json) per vietare gli script inline.
+    build: { assetsInlineLimit: 0 }
   },
 
   adapter: vercel()
