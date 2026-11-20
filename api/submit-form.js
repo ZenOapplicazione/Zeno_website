@@ -2,29 +2,54 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const ALLOWED_TYPES = new Set(['produttori', 'utenti']);
+const MAX_FIELDS = 60;
+const MAX_LABEL_LENGTH = 200;
+const MAX_VALUE_LENGTH = 5000;
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { type, fields } = req.body;
+    const { type, fields } = req.body || {};
 
-    if (!fields || !Array.isArray(fields) || fields.length === 0) {
+    if (!ALLOWED_TYPES.has(type)) {
+      return res.status(400).json({ error: 'Invalid form type' });
+    }
+
+    if (!Array.isArray(fields) || fields.length === 0 || fields.length > MAX_FIELDS) {
       return res.status(400).json({ error: 'No fields provided' });
+    }
+
+    const isValidField = (f) =>
+      f && typeof f.label === 'string' && typeof f.value === 'string' &&
+      f.label.length <= MAX_LABEL_LENGTH && f.value.length <= MAX_VALUE_LENGTH;
+    if (!fields.every(isValidField)) {
+      return res.status(400).json({ error: 'Invalid fields' });
     }
 
     const isProducer = type === 'produttori';
     const title = isProducer ? 'Questionario Produttori' : 'Questionario Utenti';
     const color = '#1b4332';
 
-    // Build HTML table rows
+    // Build HTML table rows (tutti i valori dell'utente sono escaped)
     const rows = fields
       .map(({ label, value }, i) => {
         const bg = i % 2 === 0 ? '#f9fafb' : '#ffffff';
         return `<tr style="background:${bg}">
-          <td style="padding:14px 18px;font-weight:600;color:${color};border-bottom:1px solid #e5e7eb;width:40%;font-size:14px">${label}</td>
-          <td style="padding:14px 18px;color:#374151;border-bottom:1px solid #e5e7eb;font-size:14px">${value}</td>
+          <td style="padding:14px 18px;font-weight:600;color:${color};border-bottom:1px solid #e5e7eb;width:40%;font-size:14px">${escapeHtml(label)}</td>
+          <td style="padding:14px 18px;color:#374151;border-bottom:1px solid #e5e7eb;font-size:14px">${escapeHtml(value)}</td>
         </tr>`;
       })
       .join('');
