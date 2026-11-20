@@ -49,6 +49,7 @@ const navbar = navbarData;
         <form id="navbar-email" data-formspree={navbar.formspreeUrl}>
         <input type="email" name="email" id="navbar-mail-input" class="nav-popup-input" placeholder={navbar.emailPlaceholder} required>
         <button type="submit" class="nav-popup-submit" id="navbar-mail-submit">Iscriviti</button>
+        <div class="turnstile-slot" id="navbar-turnstile"></div>
         </form>
         <p class="nav-popup-confirm" id="mail-confirm">✓ Grazie, ti contatteremo presto!</p>
       </div>
@@ -58,6 +59,9 @@ const navbar = navbarData;
 
 </nav>
         <script>
+      import { getTurnstileToken, preloadTurnstile, TURNSTILE_FIELD } from '../lib/turnstile';
+      preloadTurnstile();
+
       document.getElementById('navbar-email').addEventListener('submit', async function(e) {
         e.preventDefault();
         const formEl = e.target;
@@ -67,6 +71,7 @@ const navbar = navbarData;
         const data = new FormData(formEl);
 
         try {
+          data.append(TURNSTILE_FIELD, await getTurnstileToken(document.getElementById('navbar-turnstile'), 'compact'));
           const res = await fetch(formspreeUrl, {
             method: 'POST',
             body: data,

@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { clientIp, rejectCaptcha, verifyTurnstile } from './_lib/turnstile.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -22,7 +23,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { type, fields } = req.body || {};
+    const { type, fields, turnstileToken } = req.body || {};
+
+    const captcha = await verifyTurnstile(turnstileToken, clientIp(req));
+    if (!captcha.ok) return rejectCaptcha(res, captcha.status);
 
     if (!ALLOWED_TYPES.has(type)) {
       return res.status(400).json({ error: 'Invalid form type' });

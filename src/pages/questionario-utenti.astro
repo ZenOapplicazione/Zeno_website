@@ -76,6 +76,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .btn-submit { padding: 1rem 3rem; background: var(--forest-btn); color: white; border: none; border-radius: 12px; font-family: var(--font-body); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s; box-shadow: 0 4px 14px rgba(74,103,65,0.25); }
     .btn-submit:hover { background: var(--forest); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(74,103,65,0.3); }
     .btn-submit:disabled { background: var(--sage-light); cursor: not-allowed; transform: none; box-shadow: none; }
+    .submit-section .turnstile-slot { display: flex; justify-content: center; }
 
     /* SUCCESS */
     .success-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(26,36,22,0.6); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 2rem; }
@@ -407,6 +408,7 @@ Dati anonimi
         <div class="submit-title">Quasi fatto!</div>
         <p class="submit-sub">Le tue risposte ci aiutano a costruire qualcosa di davvero utile. Grazie per il tuo tempo.</p>
         <button type="submit" class="btn-submit" id="submitBtn">Invia il questionario</button>
+        <div class="turnstile-slot" id="form-turnstile"></div>
       </div>
 
     </form>
@@ -422,6 +424,10 @@ Dati anonimi
   </div>
 
   <script>
+    import { getTurnstileToken, preloadTurnstile, TURNSTILE_FIELD } from '../lib/turnstile';
+    preloadTurnstile();
+    const turnstileSlot = document.getElementById('form-turnstile');
+
     const form = document.getElementById('zenoForm');
 
     // ── FIELD NAMES for progress tracking ──
@@ -573,17 +579,21 @@ Dati anonimi
         const res = await fetch('/api/submit-form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'utenti', fields }),
+          body: JSON.stringify({ type: 'utenti', fields, turnstileToken: await getTurnstileToken(turnstileSlot) }),
         });
 
         const emailVal = form.querySelector('[name="entry.EMAIL"]')?.value?.trim();
         if (emailVal) {
-          const emailData = new FormData();
-          emailData.append('email', emailVal);
-          fetch('https://formspree.io/f/maqlddnl', {
-            method: 'POST',
-            body: emailData,
-            headers: { 'Accept': 'application/json' },
+          // Token separato: ogni token Turnstile si può verificare una sola volta
+          getTurnstileToken(turnstileSlot).then((token) => {
+            const emailData = new FormData();
+            emailData.append('email', emailVal);
+            emailData.append(TURNSTILE_FIELD, token);
+            return fetch('https://formspree.io/f/maqlddnl', {
+              method: 'POST',
+              body: emailData,
+              headers: { 'Accept': 'application/json' },
+            });
           }).catch(() => {});
         }
 

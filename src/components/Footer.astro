@@ -24,7 +24,11 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
           <input type="email" name="email" id="hero-email-input-footer" placeholder={footer.emailPlaceholder} required>
           <button type="submit" id="hero-email-btn-footer">{footer.emailButtonText}</button>
         </form>
+        <div class="turnstile-slot" id="footer-turnstile"></div>
         <script>
+      import { getTurnstileToken, preloadTurnstile, TURNSTILE_FIELD } from '../lib/turnstile';
+      preloadTurnstile();
+
       document.getElementById('hero-email-footer').addEventListener('submit', async function(e) {
         e.preventDefault();
         const form = e.target;
@@ -34,6 +38,7 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
         const formspreeUrl = form.getAttribute('data-formspree');
 
         try {
+          data.append(TURNSTILE_FIELD, await getTurnstileToken(document.getElementById('footer-turnstile')));
           const res = await fetch(formspreeUrl, {
             method: 'POST',
             body: data,
