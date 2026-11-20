@@ -76,7 +76,9 @@ export default async function handler(req, res) {
 
     const { error } = await resend.emails.send({
       from: process.env.SENDER_EMAIL || 'onboarding@resend.dev',
-      to: process.env.PUBLIC_FORM_EMAIL,
+      // FORM_EMAIL senza prefisso PUBLIC_: in Astro le variabili PUBLIC_ possono finire nel
+      // codice del browser. PUBLIC_FORM_EMAIL resta come fallback finché non viene rinominata su Vercel.
+      to: process.env.FORM_EMAIL || process.env.PUBLIC_FORM_EMAIL,
       subject: `ZenO — Nuovo ${title}`,
       html,
     });
