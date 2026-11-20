@@ -4,14 +4,33 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        },
+        {
+          "key": "Reporting-Endpoints",
+          "value": "csp=\"/api/csp-report\""
+        },
         {
           "key": "Content-Security-Policy-Report-Only",
-          "value": "default-src 'self'; script-src 'self' https://challenges.cloudflare.com https://*.hs-scripts.com https://*.hs-analytics.net https://*.hs-banner.com https://*.hscollectedforms.net https://*.hsadspixel.net https://*.usemessages.com https://*.hsleadflows.net https://*.hubspot.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.hubspot.com https://*.hsforms.com https://*.hs-banner.com; font-src 'self' data:; connect-src 'self' https://formspree.io https://challenges.cloudflare.com https://*.hubspot.com https://*.hubapi.com https://*.hscollectedforms.net https://*.hs-banner.com https://*.hsforms.com; frame-src https://challenges.cloudflare.com https://*.hubspot.com https://*.usemessages.com; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io; frame-ancestors 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' https://challenges.cloudflare.com https://*.hs-scripts.com https://*.hs-analytics.net https://*.hs-banner.com https://*.hscollectedforms.net https://*.hsadspixel.net https://*.usemessages.com https://*.hsleadflows.net https://*.hubspot.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.hubspot.com https://*.hsforms.com https://*.hs-banner.com; font-src 'self' data:; connect-src 'self' https://formspree.io https://challenges.cloudflare.com https://*.hubspot.com https://*.hubapi.com https://*.hscollectedforms.net https://*.hs-banner.com https://*.hsforms.com; frame-src https://challenges.cloudflare.com https://*.hubspot.com https://*.usemessages.com; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io; frame-ancestors 'none'; report-uri /api/csp-report; report-to csp"
         }
       ]
     }
