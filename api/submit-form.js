@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { clientIp, rejectCaptcha, verifyTurnstile } from './_lib/turnstile.js';
+import { isValidEmail, upsertHubSpotContact } from './_lib/hubspot.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -84,6 +85,11 @@ export default async function handler(req, res) {
       console.error('Resend error:', error);
       return res.status(500).json({ error: 'Failed to send email' });
     }
+
+    // Se il questionario contiene un'email, la salviamo come contatto in HubSpot.
+    // Un errore di HubSpot non deve far fallire l'invio del questionario.
+    const email = fields.find((f) => f.label === 'Email')?.value.trim();
+    if (isValidEmail(email)) await upsertHubSpotContact(email);
 
     return res.status(200).json({ success: true });
   } catch (err) {

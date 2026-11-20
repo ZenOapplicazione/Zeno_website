@@ -20,13 +20,13 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
           </svg>
           {footer.emailLabel}
         </div>
-        <form class="footer-email-row" id="hero-email-footer" data-formspree={footer.formspreeUrl}>
+        <form class="footer-email-row" id="hero-email-footer" data-formspree={footer.formspreeUrl} data-hs-do-not-collect="true">
           <input type="email" name="email" id="hero-email-input-footer" placeholder={footer.emailPlaceholder} required>
           <button type="submit" id="hero-email-btn-footer">{footer.emailButtonText}</button>
         </form>
         <div class="turnstile-slot" id="footer-turnstile"></div>
         <script>
-      import { getTurnstileToken, preloadTurnstile, TURNSTILE_FIELD } from '../lib/turnstile';
+      import { getTurnstileToken, preloadTurnstile, subscribeToHubSpot, TURNSTILE_FIELD } from '../lib/turnstile';
       preloadTurnstile();
 
       document.getElementById('footer-back-top').addEventListener('click', () => {
@@ -49,6 +49,7 @@ const contributeSvgs = footer.contributeCards.map(c => c.iconSvg);
             headers: { 'Accept': 'application/json' }
           });
           console.log(res)
+          subscribeToHubSpot(String(data.get('email')), document.getElementById('footer-turnstile'));
           if (res.ok) {
             input.value = 'Grazie, sarai aggiornato presto! 🌱';
             input.readOnly = true;

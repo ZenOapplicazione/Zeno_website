@@ -88,3 +88,20 @@ export async function getTurnstileToken(
   });
 }
 
+/**
+ * Salva l'email come contatto HubSpot tramite /api/subscribe.
+ * Usa un token Turnstile nuovo (quelli già usati non sono più validi).
+ * Non blocca l'interfaccia: eventuali errori vengono solo loggati.
+ */
+export async function subscribeToHubSpot(email: string, container: HTMLElement, size: TurnstileSize = 'normal'): Promise<void> {
+  try {
+    const turnstileToken = await getTurnstileToken(container, size);
+    await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, turnstileToken }),
+    });
+  } catch (err) {
+    console.error('Iscrizione HubSpot non riuscita:', err);
+  }
+}
