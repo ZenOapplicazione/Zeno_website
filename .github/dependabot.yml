@@ -1,0 +1,12 @@
+# Aggiornamenti automatici delle dipendenze (PR settimanali).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Patch e minor in un'unica PR; le major restano separate perché vanno testate.
+      minor-and-patch:
+        update-types: [minor, patch]
